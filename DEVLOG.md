@@ -1,20 +1,71 @@
+# SpendWise AI — Development Log
+
+---
+
 ## Day 1 — 2026-05-06
 
 **Hours worked:** 3
 
-**What I did:**
+### What I did:
+- Carefully read and understood the assignment requirements
+- Finalized project idea and target users
+- Broke down the application into core features (form, audit, results, email, sharing)
+- Decided on tech stack:
+  - Frontend: React.js
+  - Backend: Python (FastAPI)
+  - AI: Hugging Face (planned)
+- Created GitHub repository and initialized project
 
-* Carefully read and understood the assignment requirements
-* Finalized project idea and target users
-* Broke down the application into core features (form, audit, results, email, sharing)
-* Decided on tech stack
-* ## Tech Stack
-- Frontend: React.js
-- Backend: Python (FastAPI)
-- LLM: Hugging Face
-* Created GitHub repository and initialized project
+### What I learned:
+- This assignment focuses more on product thinking than just coding
+- Importance of structuring features before development
 
-**What I learned:**
+---
 
-* This assignment focuses more on product thinking than just coding
-* Importance of structuring features before development
+## Day 2 — 2026-05-07
+
+**Hours worked:** 4
+
+### What I did:
+
+#### 🚀 Frontend Development Progress
+- Built SpendWise AI frontend using React, Vite, and Tailwind CSS
+- Created a SaaS-style landing page with:
+  - Hero section
+  - Features section
+  - How-it-works section
+  - FAQ section
+  - CTA section
+- Developed a multi-step Audit Form UI with:
+  - Input validation
+  - LocalStorage persistence
+- Built Results Dashboard UI with:
+  - Spending comparison chart (mock data)
+  - Recommendation cards (UI only)
+- Designed Shareable Results page UI for future backend integration
+
+#### 🎨 UI/UX Improvements
+- Fixed Navbar overlap using proper z-index and spacing
+- Adjusted layout spacing for fixed navbar compatibility
+- Improved Hero section layout and removed overlapping elements
+- Fixed modal visibility and responsiveness issues
+- Cleaned UI flow and removed unnecessary demo elements
+
+#### ⚙️ Dev Setup
+- Organized frontend project structure
+- Improved component reusability
+- Configured proper `.gitignore` for frontend
+
+---
+
+### What I learned:
+- Importance of layout management (z-index, spacing, positioning)
+- Building scalable React component structure
+- Designing SaaS-style UI flow before backend integration
+
+---
+
+## Future Work
+- Build FastAPI backend
+- Integrate AI/LLM (Hugging Face / OpenAI)
+- Connect frontend to backend APIs
