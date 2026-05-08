@@ -13,8 +13,6 @@ import Navbar from '../components/Navbar';
 import ResultCard from '../components/ResultCard';
 import SummaryCard from '../components/SummaryCard';
 import LeadCaptureModal from '../components/LeadCaptureModal';
-import Footer from '../components/Footer';
-import { MOCK_DASHBOARD_DATA } from '../data/mockData';
 import { formatCurrency, getPriorityColor } from '../utils/helpers';
 
 // Animated counter component
@@ -36,7 +34,10 @@ const AnimatedCounter = ({ target, prefix = '', suffix = '', duration = 2000 }) 
         setCount(Math.floor(start));
       }
     }, 16);
-    return () => clearInterval(timer);
+    return () => {
+      clearInterval(timer);
+      started.current = false;
+    };
   }, [target, duration]);
 
   return (
@@ -61,7 +62,23 @@ const CustomTooltip = ({ active, payload, label }) => {
 const ResultsDashboard = () => {
   const [copied, setCopied] = useState(false);
   const [showLeadModal, setShowLeadModal] = useState(false);
-  const data = MOCK_DASHBOARD_DATA;
+
+  // Read data from localStorage (set by AuditForm after backend returns it)
+  const [data, setData] = useState(() => {
+    const saved = localStorage.getItem('spendwise_audit_result');
+    return saved ? JSON.parse(saved) : null;
+  });
+
+  if (!data) {
+    return (
+      <div className="bg-dark-900 min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-white text-2xl font-bold mb-4">No Audit Data Found</h2>
+          <Link to="/audit" className="btn-primary">Run an Audit First</Link>
+        </div>
+      </div>
+    );
+  }
 
 
   const copyLink = () => {
@@ -76,7 +93,7 @@ const ResultsDashboard = () => {
     <div className="bg-dark-900 min-h-screen">
       <Navbar />
 
-      <div className="container-custom pb-20 relative z-10" style={{ paddingTop: '100px' }}>
+      <div className="container-custom pb-32 relative z-10" style={{ paddingTop: '100px' }}>
         {/* Background orbs */}
         <div className="glow-orb w-[500px] h-[500px] bg-green-600/8 top-0 right-0 fixed pointer-events-none" />
         <div className="glow-orb w-[400px] h-[400px] bg-indigo-600/10 bottom-0 left-0 fixed pointer-events-none" />
@@ -234,11 +251,21 @@ const ResultsDashboard = () => {
               <h3 className="text-white font-semibold mb-1 text-sm">Spend Comparison</h3>
               <p className="text-slate-500 text-xs mb-5">Current vs Recommended</p>
               <ResponsiveContainer width="100%" height={220}>
-                <BarChart data={data.spendBreakdown} barGap={4}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
+                <BarChart data={data.spendBreakdown} barGap={4} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                  <defs>
+                    <linearGradient id="colorCurrent" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#6366f1" stopOpacity={0.8}/>
+                      <stop offset="95%" stopColor="#6366f1" stopOpacity={0.2}/>
+                    </linearGradient>
+                    <linearGradient id="colorRecommended" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#00ffa3" stopOpacity={0.8}/>
+                      <stop offset="95%" stopColor="#00ffa3" stopOpacity={0.2}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" vertical={false} />
                   <XAxis
                     dataKey="name"
-                    tick={{ fill: '#64748b', fontSize: 9 }}
+                    tick={{ fill: '#64748b', fontSize: 10 }}
                     axisLine={false}
                     tickLine={false}
                     angle={-30}
@@ -246,15 +273,15 @@ const ResultsDashboard = () => {
                     height={45}
                   />
                   <YAxis tick={{ fill: '#64748b', fontSize: 10 }} axisLine={false} tickLine={false} />
-                  <Tooltip content={<CustomTooltip />} />
+                  <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(255,255,255,0.02)' }} />
                   <Bar dataKey="spend" name="Current" radius={[4, 4, 0, 0]}>
                     {data.spendBreakdown.map((_, i) => (
-                      <Cell key={i} fill="rgba(99,102,241,0.6)" />
+                      <Cell key={i} fill="url(#colorCurrent)" />
                     ))}
                   </Bar>
                   <Bar dataKey="recommended" name="Recommended" radius={[4, 4, 0, 0]}>
                     {data.spendBreakdown.map((_, i) => (
-                      <Cell key={i} fill="rgba(0,255,163,0.5)" />
+                      <Cell key={i} fill="url(#colorRecommended)" />
                     ))}
                   </Bar>
                 </BarChart>
@@ -271,42 +298,48 @@ const ResultsDashboard = () => {
               </div>
             </motion.div>
 
-            {/* Suggested actions */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.4 }}
-              className="glass-card p-6"
-            >
-              <h3 className="text-white font-semibold mb-4 flex items-center gap-2 text-sm">
-                <MdPriorityHigh className="text-yellow-400" />
-                Suggested Actions
-              </h3>
-              <div className="space-y-3">
-                {data.suggestedActions.map((action, i) => {
-                  const colors = getPriorityColor(action.priority);
-                  return (
-                    <div key={i} className="flex items-start gap-3 p-3 bg-white/3 rounded-xl border border-white/5">
-                      <span className={`tag-pill ${colors.bg} ${colors.text} border ${colors.border} shrink-0 text-[10px] mt-0.5`}>
-                        {action.priority}
-                      </span>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-slate-300 text-xs font-medium leading-snug">{action.action}</p>
-                        <p className="text-slate-600 text-xs mt-0.5">Effort: {action.effort}</p>
-                      </div>
-                      <span className="text-green-400 font-bold text-xs shrink-0">+${action.saving}/mo</span>
-                    </div>
-                  );
-                })}
-              </div>
-            </motion.div>
+
           </div>
         </div>
 
         {/* AI Summary */}
         <div className="mb-8">
-          <SummaryCard />
+          <SummaryCard aiSummary={data.aiSummary} />
         </div>
+
+        {/* Dynamic Business Logic (Credex Promo & Optimized Message) */}
+        {data.projectedMonthlySavings > 500 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+            className="mb-8 p-8 glass-card border-indigo-500/50 bg-indigo-500/10 text-center"
+          >
+            <h3 className="text-2xl font-bold text-white mb-3 flex items-center justify-center gap-2">
+              <HiSparkles className="text-indigo-400" />
+              Unlock these savings instantly with Credex
+            </h3>
+            <p className="text-slate-300 mb-6 max-w-2xl mx-auto text-sm leading-relaxed">
+              Credex is the premium secondary market for discounted AI infrastructure credits. 
+              Instead of paying retail for your optimized stack, you can fulfill these exact recommendations through Credex and stack your savings even higher.
+            </p>
+            <a href="https://credex.rocks" target="_blank" rel="noreferrer" className="btn-primary inline-flex items-center gap-2 px-8 py-3 rounded-xl font-bold shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/40 transition-all">
+              Claim Discounted Credits on Credex <MdArrowForward />
+            </a>
+          </motion.div>
+        )}
+
+        {data.projectedMonthlySavings < 100 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+            className="mb-8 p-6 glass-card border-green-500/50 bg-green-500/10 text-center"
+          >
+            <h3 className="text-xl font-bold text-green-400 mb-2">You're already highly optimized!</h3>
+            <p className="text-slate-300 text-sm">Your current AI stack is lean and efficient. We did not find any major overlaps or overspending in your current setup. Keep up the great operational discipline!</p>
+          </motion.div>
+        )}
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -331,10 +364,8 @@ const ResultsDashboard = () => {
         </motion.div>
       </div>
 
-      <Footer />
-
       {/* Lead capture modal */}
-      {showLeadModal && <LeadCaptureModal onClose={() => setShowLeadModal(false)} />}
+      {showLeadModal && <LeadCaptureModal onClose={() => setShowLeadModal(false)} auditData={data} />}
     </div>
   );
 };

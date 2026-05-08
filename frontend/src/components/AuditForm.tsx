@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MdAdd, MdRocketLaunch, MdCheck, MdArrowForward, MdArrowBack, MdInfo } from 'react-icons/md';
+import { MdAdd, MdClose, MdArrowForward, MdArrowBack, MdInfo } from 'react-icons/md';
 import { HiSparkles } from 'react-icons/hi';
+import { processAudit } from '../api/api';
+import { AI_TOOLS, PLAN_TYPES } from '../data/mockData';
 import { useNavigate } from 'react-router-dom';
 import ToolCard from './ToolCard';
 import { useLocalStorage } from '../hooks/useHooks';
@@ -84,9 +86,17 @@ const AuditForm = () => {
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
-    // Simulate AI analysis delay
-    await new Promise((r) => setTimeout(r, 2000));
-    navigate('/results/demo');
+    try {
+      // Call backend API
+      const result = await processAudit(tools.filter(t => t.toolName));
+      // Save result to localStorage for the dashboard to read
+      localStorage.setItem('spendwise_audit_result', JSON.stringify(result));
+      navigate('/results/demo');
+    } catch (error) {
+      console.error(error);
+      setErrors({ tools: "Failed to connect to the server. Is it running?" });
+      setIsSubmitting(false);
+    }
   };
 
   return (

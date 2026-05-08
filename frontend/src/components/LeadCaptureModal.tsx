@@ -2,14 +2,15 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MdClose, MdCheck } from 'react-icons/md';
 import { HiSparkles } from 'react-icons/hi';
-import { saveLeadToStorage } from '../utils/helpers';
+import { captureLeadAndEmail } from '../api/api';
 
 const TEAM_SIZES = ['Just me', '2-5', '6-15', '16-50', '51+'];
 const ROLES = ['Founder/CEO', 'CTO', 'Engineering Lead', 'Developer', 'Product Manager', 'Other'];
 
-const LeadCaptureModal = ({ onClose }) => {
-  const [form, setForm] = useState({ email: '', company: '', role: '', teamSize: '' });
+const LeadCaptureModal = ({ onClose, auditData }) => {
+  const [form, setForm] = useState({ email: '', company: '', role: '', teamSize: '', _honeypot: '' });
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
 
   const validate = () => {
@@ -21,11 +22,34 @@ const LeadCaptureModal = ({ onClose }) => {
     return Object.keys(errs).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Honeypot check for abuse protection (bots auto-fill hidden fields)
+    if (form._honeypot) {
+      console.warn("Bot detected via honeypot. Rejecting silently.");
+      setSubmitted(true);
+      return;
+    }
+
     if (!validate()) return;
-    saveLeadToStorage(form);
-    setSubmitted(true);
+    
+    setIsSubmitting(true);
+    try {
+      await captureLeadAndEmail(
+        form.email, 
+        form.company, 
+        form.role, 
+        form.teamSize,
+        auditData
+      );
+      setSubmitted(true);
+    } catch (error) {
+      console.error(error);
+      setErrors({ email: "Failed to send. Is the backend running?" });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -91,8 +115,24 @@ const LeadCaptureModal = ({ onClose }) => {
                   </div>
                   <div>
                     <div style={{ color: '#fff', fontWeight: 600, fontSize: '15px' }}>Get Your Full Report</div>
-                    <div style={{ color: '#64748b', fontSize: '12px', marginTop: '2px' }}>Free · No spam · Unsubscribe anytime</div>
+                    <p style={{ color: '#94a3b8', fontSize: '13px', marginTop: '6px' }}>
+                      We'll email you a secure link to your full report.
+                    </p>
                   </div>
+                </div>
+
+                {/* Honeypot field (hidden from real users, visible to bots) */}
+                <div style={{ display: 'none' }} aria-hidden="true">
+                  <label htmlFor="_honeypot">Do not fill this out if you are human</label>
+                  <input 
+                    type="text" 
+                    id="_honeypot" 
+                    name="_honeypot" 
+                    value={form._honeypot} 
+                    onChange={(e) => setForm({ ...form, _honeypot: e.target.value })} 
+                    tabIndex="-1" 
+                    autoComplete="off" 
+                  />
                 </div>
 
                 {/* Close */}
@@ -199,12 +239,17 @@ const LeadCaptureModal = ({ onClose }) => {
                 {/* Submit */}
                 <button
                   type="submit"
+                  disabled={isSubmitting}
                   id="lead-submit-btn"
                   className="btn-primary"
                   style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '12px' }}
                 >
-                  <HiSparkles />
-                  Send My Free Report
+                  {isSubmitting ? (
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  ) : (
+                    <HiSparkles />
+                  )}
+                  {isSubmitting ? 'Sending...' : 'Send My Free Report'}
                 </button>
 
                 <p style={{ textAlign: 'center', color: '#475569', fontSize: '11px' }}>

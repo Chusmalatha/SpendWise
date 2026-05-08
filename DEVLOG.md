@@ -65,7 +65,25 @@
 
 ---
 
-## Future Work
-- Build FastAPI backend
-- Integrate AI/LLM (Hugging Face / OpenAI)
-- Connect frontend to backend APIs
+## Day 3 — 2026-05-08
+
+**Hours worked:** 4
+
+### What I did:
+
+#### ⚙️ Backend Development
+- Successfully built and completed the entire FastAPI backend architecture
+- Created database models and connection logic (`models.py`, `database.py`)
+- Implemented core backend analyzer service (`analyzer.py`)
+- Configured and tested all necessary REST endpoints in `main.py`
+
+### What I learned:
+- Structuring FastAPI projects into modular services
+- End-to-end integration patterns between React and FastAPI
+
+---
+
+## Day 4 — 2026-05-09 (Planned)
+- Implement email sending service
+- Integrate AI/LLM for dynamic executive summaries
+- Prepare project for production deployment

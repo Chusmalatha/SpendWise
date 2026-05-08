@@ -7,7 +7,7 @@ const CTASection = () => {
   const { ref, inView } = useInView(0.2);
 
   return (
-    <section id="pricing" className="relative py-28 overflow-hidden bg-dark-900">
+    <section id="cta" className="relative py-28 overflow-hidden bg-dark-900">
       <div className="glow-orb w-[700px] h-[700px] bg-indigo-600/15 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
 
       <div className="container-custom relative z-10">
