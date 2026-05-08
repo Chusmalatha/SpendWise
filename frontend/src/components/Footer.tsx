@@ -57,7 +57,7 @@ const Footer = () => {
               {[
                 { label: 'Features', action: () => scrollToSection('#features') },
                 { label: 'How It Works', action: () => scrollToSection('#how-it-works') },
-                { label: 'Pricing', action: () => scrollToSection('#pricing') },
+                { label: 'FAQ', action: () => scrollToSection('#faq') },
                 { label: 'Start Audit', to: '/audit' },
                 { label: 'View Demo', to: '/results/demo' },
               ].map((item) => (

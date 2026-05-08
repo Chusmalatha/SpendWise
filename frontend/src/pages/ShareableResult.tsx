@@ -8,7 +8,6 @@ import {
 } from 'recharts';
 import Navbar from '../components/Navbar';
 import ResultCard from '../components/ResultCard';
-import Footer from '../components/Footer';
 import { MOCK_DASHBOARD_DATA } from '../data/mockData';
 import { formatCurrency } from '../utils/helpers';
 
@@ -29,7 +28,7 @@ const ShareableResult = () => {
     <div className="bg-dark-900 min-h-screen">
       <Navbar />
 
-      <div className="container-custom pb-20 max-w-4xl relative z-10" style={{ paddingTop: '100px' }}>
+      <div className="container-custom pb-32 max-w-4xl relative z-10" style={{ paddingTop: '100px' }}>
         {/* Background orbs */}
         <div className="glow-orb w-[500px] h-[500px] bg-green-600/8 top-0 right-0 fixed pointer-events-none" />
 
@@ -212,8 +211,6 @@ const ShareableResult = () => {
           </div>
         </motion.div>
       </div>
-
-      <Footer />
     </div>
   );
 };

@@ -138,7 +138,7 @@ const ToolCard = ({ tool, index, onUpdate, onRemove, canRemove }) => {
           <label className="block text-slate-400 text-xs font-medium mb-2 uppercase tracking-wider">
             Primary Use Case
           </label>
-          <div className="grid grid-cols-5 gap-2">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
             {USE_CASES.map((uc) => (
               <button
                 key={uc.value}

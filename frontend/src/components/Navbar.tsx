@@ -7,7 +7,6 @@ import { MdRocketLaunch } from 'react-icons/md';
 const NAV_LINKS = [
   { label: 'Features', href: '#features' },
   { label: 'How It Works', href: '#how-it-works' },
-  { label: 'Pricing', href: '#pricing' },
   { label: 'FAQ', href: '#faq' },
 ];
 
@@ -97,15 +96,7 @@ const Navbar = () => {
 
           {/* Desktop nav links — center */}
           <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '2px',
-              position: 'absolute',
-              left: '50%',
-              transform: 'translateX(-50%)',
-            }}
-            className="hidden lg:flex"
+            className="hidden lg:flex items-center gap-[2px] absolute left-1/2 -translate-x-1/2"
           >
             {NAV_LINKS.map((link) => (
               <button
@@ -142,11 +133,9 @@ const Navbar = () => {
             <Link
               to="/audit"
               id="nav-start-audit-btn"
-              className="hidden md:flex"
+              className="hidden md:inline-flex items-center gap-[7px]"
               style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '7px',
+
                 padding: '9px 20px',
                 fontSize: '14px',
                 fontWeight: 600,
@@ -177,11 +166,9 @@ const Navbar = () => {
             <button
               id="mobile-menu-btn"
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="lg:hidden"
+              className="lg:hidden flex items-center justify-center"
               style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
+
                 width: '38px',
                 height: '38px',
                 borderRadius: '9px',
