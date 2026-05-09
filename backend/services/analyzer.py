@@ -12,6 +12,7 @@ PRICING_DATA = {
   'windsurf': {'free': 0, 'pro': 15, 'team': 35, 'enterprise': 80},
 }
 
+
 def analyze_spend(tools: List) -> dict:
     """Analyze the user's tools and generate recommendations"""
     total_monthly = 0

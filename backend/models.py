@@ -11,6 +11,7 @@ class ToolInput(BaseModel):
 class AuditRequest(BaseModel):
     tools: List[ToolInput]
 
+
 class ActionItem(BaseModel):
     action: str
     priority: str
