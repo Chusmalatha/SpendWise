@@ -81,4 +81,27 @@
 - Structuring FastAPI projects into modular services
 - End-to-end integration patterns between React and FastAPI
 
+---
 
+## Day 4 — 2026-05-09
+
+**Hours worked:** 4
+
+### What I did:
+
+#### 📧 Email Service Integration
+- Added email sending functionality for report distribution
+- Configured email service modules and backend integration
+
+#### 🧠 LLM Integration
+- Integrated LLM services for advanced spending analysis and insights
+- Developed AI-driven recommendation logic
+
+#### 🗄️ MongoDB Integration
+- Configured MongoDB as the primary data store for application data
+- Implemented data persistence layers for user audits and results
+
+### What I learned:
+- Implementing AI-powered features in a production-style environment
+- Working with NoSQL databases (MongoDB) for flexible data storage
+- Setting up reliable background services for email notifications
