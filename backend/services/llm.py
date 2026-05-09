@@ -11,6 +11,7 @@ async def generate_summary(audit_data: dict) -> str:
         savings = audit_data.get("projectedMonthlySavings", 0)
         tools = audit_data.get("toolsAnalyzed", 0)
         
+        
         if savings > 0:
             return (
                 f"We conducted a comprehensive audit of your {tools} active AI subscriptions, which currently account for ${spend} in monthly recurring revenue.\n\n"

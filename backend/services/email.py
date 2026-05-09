@@ -8,6 +8,7 @@ async def send_report_email(to_email: str, company: str, audit_data: dict):
     sg_key = os.getenv("SENDGRID_API_KEY")
     from_email = os.getenv("SENDGRID_FROM_EMAIL", "reports@spendwise.ai")
     
+    
     if not sg_key or sg_key == "your_sendgrid_key_here":
         print(f"\n--- DUMMY EMAIL ---")
         print(f"To: {to_email}")
