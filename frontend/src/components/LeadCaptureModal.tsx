@@ -26,7 +26,7 @@ const LeadCaptureModal = ({ onClose, auditData }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Honeypot check for abuse protection (bots auto-fill hidden fields)
     if (form._honeypot) {
       console.warn("Bot detected via honeypot. Rejecting silently.");
@@ -35,13 +35,13 @@ const LeadCaptureModal = ({ onClose, auditData }) => {
     }
 
     if (!validate()) return;
-    
+
     setIsSubmitting(true);
     try {
       await captureLeadAndEmail(
-        form.email, 
-        form.company, 
-        form.role, 
+        form.email,
+        form.company,
+        form.role,
         form.teamSize,
         auditData
       );
@@ -67,10 +67,9 @@ const LeadCaptureModal = ({ onClose, auditData }) => {
         style={{
           position: 'fixed',
           inset: 0,
-          zIndex: 2000,
-          background: 'rgba(3, 7, 18, 0.85)',
-          backdropFilter: 'blur(8px)',
-          WebkitBackdropFilter: 'blur(8px)',
+          zIndex: 3000,
+          background: 'rgba(3, 7, 18, 0.9)',
+          backdropFilter: 'blur(4px)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -127,14 +126,14 @@ const LeadCaptureModal = ({ onClose, auditData }) => {
                 {/* Honeypot field (hidden from real users, visible to bots) */}
                 <div style={{ display: 'none' }} aria-hidden="true">
                   <label htmlFor="_honeypot">Do not fill this out if you are human</label>
-                  <input 
-                    type="text" 
-                    id="_honeypot" 
-                    name="_honeypot" 
-                    value={form._honeypot} 
-                    onChange={(e) => setForm({ ...form, _honeypot: e.target.value })} 
-                    tabIndex="-1" 
-                    autoComplete="off" 
+                  <input
+                    type="text"
+                    id="_honeypot"
+                    name="_honeypot"
+                    value={form._honeypot}
+                    onChange={(e) => setForm({ ...form, _honeypot: e.target.value })}
+                    tabIndex="-1"
+                    autoComplete="off"
                   />
                 </div>
 
@@ -297,67 +296,67 @@ const LeadCaptureModal = ({ onClose, auditData }) => {
       </motion.div>
     </AnimatePresence>
     
-    {/* Error Popup Overlay */}
-    <AnimatePresence>
-      {showErrorPopup && (
+    {/* Error Popup Overlay */ }
+  <AnimatePresence>
+    {showErrorPopup && (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        style={{
+          position: 'fixed',
+          inset: 0,
+          zIndex: 3000,
+          background: 'rgba(3, 7, 18, 0.9)',
+          backdropFilter: 'blur(4px)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '20px'
+        }}
+      >
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
+          initial={{ scale: 0.9, opacity: 0, y: 20 }}
+          animate={{ scale: 1, opacity: 1, y: 0 }}
+          exit={{ scale: 0.9, opacity: 0, y: 20 }}
           style={{
-            position: 'fixed',
-            inset: 0,
-            zIndex: 3000,
-            background: 'rgba(3, 7, 18, 0.9)',
-            backdropFilter: 'blur(4px)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '20px'
+            background: '#111827',
+            border: '1px solid rgba(239, 68, 68, 0.2)',
+            borderRadius: '24px',
+            padding: '32px',
+            maxWidth: '400px',
+            width: '100%',
+            textAlign: 'center',
+            boxShadow: '0 20px 50px rgba(0,0,0,0.5)'
           }}
         >
-          <motion.div
-            initial={{ scale: 0.9, opacity: 0, y: 20 }}
-            animate={{ scale: 1, opacity: 1, y: 0 }}
-            exit={{ scale: 0.9, opacity: 0, y: 20 }}
+          <div style={{
+            width: '60px', height: '60px', background: 'rgba(239, 68, 68, 0.1)',
+            borderRadius: '50%', display: 'flex', alignItems: 'center',
+            justifyContent: 'center', margin: '0 auto 20px'
+          }}>
+            <span style={{ fontSize: '24px' }}>❌</span>
+          </div>
+          <h3 style={{ color: '#fff', fontSize: '20px', fontWeight: 700, marginBottom: '12px' }}>Transmission Error</h3>
+          <p style={{ color: '#94a3b8', fontSize: '14px', lineHeight: '1.6', marginBottom: '24px' }}>
+            {errorMessage}
+          </p>
+          <button
+            onClick={() => setShowErrorPopup(false)}
             style={{
-              background: '#111827',
-              border: '1px solid rgba(239, 68, 68, 0.2)',
-              borderRadius: '24px',
-              padding: '32px',
-              maxWidth: '400px',
-              width: '100%',
-              textAlign: 'center',
-              boxShadow: '0 20px 50px rgba(0,0,0,0.5)'
+              width: '100%', padding: '14px', background: 'rgba(239, 68, 68, 0.2)',
+              border: '1px solid rgba(239, 68, 68, 0.3)', color: '#f87171',
+              borderRadius: '14px', fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s'
             }}
+            onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(239, 68, 68, 0.3)'}
+            onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(239, 68, 68, 0.2)'}
           >
-            <div style={{ 
-              width: '60px', height: '60px', background: 'rgba(239, 68, 68, 0.1)', 
-              borderRadius: '50%', display: 'flex', alignItems: 'center', 
-              justifyContent: 'center', margin: '0 auto 20px' 
-            }}>
-              <span style={{ fontSize: '24px' }}>❌</span>
-            </div>
-            <h3 style={{ color: '#fff', fontSize: '20px', fontWeight: 700, marginBottom: '12px' }}>Transmission Error</h3>
-            <p style={{ color: '#94a3b8', fontSize: '14px', lineHeight: '1.6', marginBottom: '24px' }}>
-              {errorMessage}
-            </p>
-            <button
-              onClick={() => setShowErrorPopup(false)}
-              style={{
-                width: '100%', padding: '14px', background: 'rgba(239, 68, 68, 0.2)',
-                border: '1px solid rgba(239, 68, 68, 0.3)', color: '#f87171',
-                borderRadius: '14px', fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s'
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(239, 68, 68, 0.3)'}
-              onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(239, 68, 68, 0.2)'}
-            >
-              Close
-            </button>
-          </motion.div>
+            Close
+          </button>
         </motion.div>
-      )}
-    </AnimatePresence>
+      </motion.div>
+    )}
+  </AnimatePresence>
     </>
   );
 };
