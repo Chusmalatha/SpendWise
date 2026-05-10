@@ -12,28 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import { processAudit } from '../api/api';
 import ToolCard from './ToolCard';
 import { calculateTotals, formatCurrency } from '../utils/helpers';
-
-interface Tool {
-  toolName: string;
-  planType: string;
-  monthlySpend: string;
-  seats: string;
-  useCase: string;
-}
-
-interface CompanyInfo {
-  companyName: string;
-  teamSize: string;
-  role: string;
-  email: string;
-}
-
-interface Errors {
-  companyName?: string;
-  email?: string;
-  teamSize?: string;
-  tools?: string;
-}
+import { Tool, CompanyInfo, Errors } from '../types/types';
 
 const EMPTY_TOOL: Tool = {
   toolName: '',
@@ -249,49 +228,78 @@ const AuditForm = () => {
               exit={{ opacity: 0, x: -30 }}
             >
               <div className="glass-card p-8">
-                <h2 className="text-white text-xl font-semibold mb-6">
-                  Company Information
+                <h2 className="text-white text-xl font-semibold mb-6 flex items-center gap-2">
+                   <span>🏢</span> Company Information
                 </h2>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  <input
-                    type="email"
-                    placeholder="Work Email"
-                    value={companyInfo.email}
-                    onChange={(e) =>
-                      setCompanyInfo({
-                        ...companyInfo,
-                        email: e.target.value,
-                      })
-                    }
-                    className="input-field md:col-span-2"
-                  />
-
-                  <input
-                    type="text"
-                    placeholder="Company Name"
-                    value={companyInfo.companyName}
-                    onChange={(e) =>
-                      setCompanyInfo({
-                        ...companyInfo,
-                        companyName: e.target.value,
-                      })
-                    }
-                    className="input-field"
-                  />
-
-                  <input
-                    type="text"
-                    placeholder="Your Role"
-                    value={companyInfo.role}
-                    onChange={(e) =>
-                      setCompanyInfo({
-                        ...companyInfo,
-                        role: e.target.value,
-                      })
-                    }
-                    className="input-field"
-                  />
+                  <div className="md:col-span-2">
+                    <label className="block text-slate-400 text-xs font-medium mb-2 uppercase tracking-wider">
+                      Work Email *
+                    </label>
+                    <input
+                      type="email"
+                      value={companyInfo.email}
+                      onChange={(e) => setCompanyInfo({ ...companyInfo, email: e.target.value })}
+                      placeholder="you@company.com"
+                      id="audit-email"
+                      className={`input-field ${errors.email ? 'border-red-500/50' : ''}`}
+                    />
+                    {errors.email && <p className="text-red-400 text-xs mt-1">{errors.email}</p>}
+                  </div>
+                  <div>
+                    <label className="block text-slate-400 text-xs font-medium mb-2 uppercase tracking-wider">
+                      Company Name *
+                    </label>
+                    <input
+                      type="text"
+                      value={companyInfo.companyName}
+                      onChange={(e) => setCompanyInfo({ ...companyInfo, companyName: e.target.value })}
+                      placeholder="Acme Corp"
+                      id="audit-company"
+                      className={`input-field ${errors.companyName ? 'border-red-500/50' : ''}`}
+                    />
+                    {errors.companyName && <p className="text-red-400 text-xs mt-1">{errors.companyName}</p>}
+                  </div>
+                  <div>
+                    <label className="block text-slate-400 text-xs font-medium mb-2 uppercase tracking-wider">
+                      Your Role
+                    </label>
+                    <select
+                      value={companyInfo.role}
+                      onChange={(e) => setCompanyInfo({ ...companyInfo, role: e.target.value })}
+                      id="audit-role"
+                      className="select-field"
+                    >
+                      <option value="">Select your role...</option>
+                      {['Founder/CEO', 'CTO', 'Engineering Lead', 'Developer', 'Product Manager', 'Indie Hacker', 'Other'].map((r) => (
+                        <option key={r} value={r}>{r}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="block text-slate-400 text-xs font-medium mb-2 uppercase tracking-wider">
+                      Team Size *
+                    </label>
+                    <div className="grid grid-cols-5 gap-2">
+                      {['1', '2-5', '6-15', '16-50', '51+'].map((size) => (
+                        <button
+                          key={size}
+                          type="button"
+                          id={`team-size-${size}`}
+                          onClick={() => setCompanyInfo({ ...companyInfo, teamSize: size })}
+                          className={`py-3 rounded-xl border text-sm font-medium transition-all duration-200 ${
+                            companyInfo.teamSize === size
+                              ? 'bg-indigo-500/20 border-indigo-500/50 text-indigo-300'
+                              : 'bg-white/3 border-white/8 text-slate-400 hover:border-white/20'
+                          }`}
+                        >
+                          {size}
+                        </button>
+                      ))}
+                    </div>
+                    {errors.teamSize && <p className="text-red-400 text-xs mt-1">{errors.teamSize}</p>}
+                  </div>
                 </div>
               </div>
             </motion.div>
@@ -316,22 +324,22 @@ const AuditForm = () => {
                     </span>
                   </div>
 
-                  <div>
+                  <div className="text-right">
                     <div className="text-white font-bold">
-                      {formatCurrency(
-                        totals.totalMonthly
-                      )}
-                      /mo
+                      {formatCurrency(totals.totalMonthly)}/mo
                     </div>
 
                     <div className="text-slate-500 text-xs">
-                      {formatCurrency(
-                        totals.totalAnnual
-                      )}
-                      /yr
+                      {formatCurrency(totals.totalAnnual)}/yr
                     </div>
                   </div>
                 </motion.div>
+              )}
+
+              {errors.tools && (
+                <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 mb-4 text-red-400 text-sm">
+                  {errors.tools}
+                </div>
               )}
 
               <AnimatePresence>
@@ -358,11 +366,83 @@ const AuditForm = () => {
                 onClick={addTool}
                 whileHover={{ scale: 1.01 }}
                 whileTap={{ scale: 0.99 }}
-                className="w-full py-4 rounded-2xl border-2 border-dashed border-white/15 text-slate-400 hover:text-white transition-all duration-300 flex items-center justify-center gap-2"
+                className="w-full py-4 rounded-2xl border-2 border-dashed border-white/15 text-slate-400 hover:text-white transition-all duration-300 flex items-center justify-center gap-2 font-medium"
               >
                 <MdAdd size={20} />
                 Add Another AI Tool
               </motion.button>
+            </motion.div>
+          )}
+
+          {step === 3 && (
+            <motion.div
+              key="step3"
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -30 }}
+            >
+              <div className="glass-card p-8 mb-5">
+                <h2 className="text-white font-semibold text-xl mb-6 flex items-center gap-2">
+                  <span>✅</span> Review Your Audit
+                </h2>
+
+                {/* Company summary */}
+                <div className="mb-6 p-4 bg-white/3 rounded-xl border border-white/8">
+                  <h3 className="text-slate-400 text-xs uppercase tracking-wider mb-3">Company</h3>
+                  <div className="grid grid-cols-2 gap-3 text-sm">
+                    <div>
+                      <span className="text-slate-500">Company:</span>{' '}
+                      <span className="text-white">{companyInfo.companyName || '—'}</span>
+                    </div>
+                    <div>
+                      <span className="text-slate-500">Team Size:</span>{' '}
+                      <span className="text-white">{companyInfo.teamSize || '—'}</span>
+                    </div>
+                    <div>
+                      <span className="text-slate-500">Role:</span>{' '}
+                      <span className="text-white">{companyInfo.role || '—'}</span>
+                    </div>
+                    <div>
+                      <span className="text-slate-500">Email:</span>{' '}
+                      <span className="text-white">{companyInfo.email}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Tools summary */}
+                <div className="space-y-2 mb-6">
+                  <h3 className="text-slate-400 text-xs uppercase tracking-wider mb-3">Tools ({tools.filter(t => t.toolName).length})</h3>
+                  {tools.filter(t => t.toolName).map((tool, i) => (
+                    <div key={i} className="flex items-center justify-between p-3 bg-white/3 rounded-xl border border-white/5">
+                      <span className="text-slate-300 text-sm font-medium capitalize">{tool.toolName.replace('-', ' ')}</span>
+                      <div className="flex items-center gap-3">
+                        <span className="text-slate-500 text-xs capitalize">{tool.planType} · {tool.seats} seat(s)</span>
+                        <span className="text-white font-semibold text-sm">
+                          ${(parseFloat(tool.monthlySpend) * parseInt(tool.seats || '1')).toFixed(0)}/mo
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Totals */}
+                <div className="bg-gradient-to-r from-indigo-500/10 to-purple-500/10 border border-indigo-500/20 rounded-2xl p-5 flex items-center justify-between">
+                  <div>
+                    <div className="text-slate-400 text-sm">Total Monthly Spend</div>
+                    <div className="text-3xl font-bold text-white mt-1">{formatCurrency(totals.totalMonthly)}</div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-slate-400 text-sm">Total Annual Spend</div>
+                    <div className="text-3xl font-bold gradient-text mt-1">{formatCurrency(totals.totalAnnual)}</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Privacy note */}
+              <div className="flex items-start gap-3 p-4 bg-white/2 border border-white/5 rounded-xl text-slate-400 text-sm mb-5">
+                <span className="text-lg">🔒</span>
+                <span>Your data is encrypted and never shared with AI tool vendors. Results are generated locally and privately.</span>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
@@ -372,7 +452,7 @@ const AuditForm = () => {
           <button
             onClick={handleBack}
             disabled={step === 1}
-            className="btn-secondary flex items-center gap-2"
+            className="btn-secondary flex items-center gap-2 disabled:opacity-30 disabled:cursor-not-allowed"
           >
             <MdArrowBack />
             Back
@@ -390,7 +470,7 @@ const AuditForm = () => {
             <button
               onClick={handleSubmit}
               disabled={isSubmitting}
-              className="btn-primary flex items-center gap-2"
+              className="btn-primary flex items-center gap-2 min-w-[180px] justify-center"
             >
               {isSubmitting ? (
                 <>
@@ -403,7 +483,6 @@ const AuditForm = () => {
                     }}
                     className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full"
                   />
-
                   Analyzing...
                 </>
               ) : (

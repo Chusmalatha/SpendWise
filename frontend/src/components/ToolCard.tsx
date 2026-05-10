@@ -1,9 +1,18 @@
 import { motion } from 'framer-motion';
 import { MdClose, MdDragIndicator } from 'react-icons/md';
 import { AI_TOOLS, PLAN_TYPES, USE_CASES } from '../data/mockData';
+import { Tool } from '../types/types';
 
-const ToolCard = ({ tool, index, onUpdate, onRemove, canRemove }) => {
-  const handleChange = (field, value) => {
+interface ToolCardProps {
+  tool: Tool;
+  index: number;
+  onUpdate: (index: number, updated: Tool) => void;
+  onRemove: (index: number) => void;
+  canRemove: boolean;
+}
+
+const ToolCard: React.FC<ToolCardProps> = ({ tool, index, onUpdate, onRemove, canRemove }) => {
+  const handleChange = (field: keyof Tool, value: string) => {
     onUpdate(index, { ...tool, [field]: value });
   };
 
