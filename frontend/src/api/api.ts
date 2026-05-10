@@ -1,8 +1,8 @@
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000/api";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 export const processAudit = async (tools) => {
   try {
-    const response = await fetch(`${API_URL}/audit`, {
+    const response = await fetch(`${API_URL}/api/audit`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -21,14 +21,26 @@ export const processAudit = async (tools) => {
   }
 };
 
-export const captureLeadAndEmail = async (email, company, role, teamSize, auditData) => {
+export const captureLeadAndEmail = async (
+  email,
+  company,
+  role,
+  teamSize,
+  auditData
+) => {
   try {
-    const response = await fetch(`${API_URL}/report/email`, {
+    const response = await fetch(`${API_URL}/api/report/email`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email, company, role, teamSize, auditData }),
+      body: JSON.stringify({
+        email,
+        company,
+        role,
+        teamSize,
+        auditData,
+      }),
     });
 
     if (!response.ok) {
