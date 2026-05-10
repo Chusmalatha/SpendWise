@@ -1,5 +1,10 @@
 from fastapi import FastAPI, HTTPException, Body
 from fastapi.middleware.cors import CORSMiddleware
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 from models import AuditRequest, AuditResponse, LeadCaptureRequest, LeadCaptureResponse
 from database import save_lead
 from services.analyzer import analyze_spend
@@ -11,7 +16,11 @@ app = FastAPI(title="SpendWise AI API")
 # Configure CORS for React frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:5174", "https://spend-wise-t685.vercel.app/"],
+    allow_origins=[
+        "http://localhost:5173", 
+        "http://localhost:5174", 
+        os.getenv("FRONTEND_URL", "https://spend-wise-t685.vercel.app").rstrip("/")
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
