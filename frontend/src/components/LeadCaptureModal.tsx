@@ -12,6 +12,8 @@ const LeadCaptureModal = ({ onClose, auditData }) => {
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
+  const [showErrorPopup, setShowErrorPopup] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const validate = () => {
     const errs = {};
@@ -46,7 +48,8 @@ const LeadCaptureModal = ({ onClose, auditData }) => {
       setSubmitted(true);
     } catch (error) {
       console.error(error);
-      setErrors({ email: "Failed to send. Is the backend running?" });
+      setErrorMessage("We couldn't send your report right now. Please check your internet connection or try again later.");
+      setShowErrorPopup(true);
     } finally {
       setIsSubmitting(false);
     }
@@ -293,6 +296,69 @@ const LeadCaptureModal = ({ onClose, auditData }) => {
         </motion.div>
       </motion.div>
     </AnimatePresence>
+    
+    {/* Error Popup Overlay */}
+    <AnimatePresence>
+      {showErrorPopup && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 3000,
+            background: 'rgba(3, 7, 18, 0.9)',
+            backdropFilter: 'blur(4px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '20px'
+          }}
+        >
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0, y: 20 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+            exit={{ scale: 0.9, opacity: 0, y: 20 }}
+            style={{
+              background: '#111827',
+              border: '1px solid rgba(239, 68, 68, 0.2)',
+              borderRadius: '24px',
+              padding: '32px',
+              maxWidth: '400px',
+              width: '100%',
+              textAlign: 'center',
+              boxShadow: '0 20px 50px rgba(0,0,0,0.5)'
+            }}
+          >
+            <div style={{ 
+              width: '60px', height: '60px', background: 'rgba(239, 68, 68, 0.1)', 
+              borderRadius: '50%', display: 'flex', alignItems: 'center', 
+              justifyContent: 'center', margin: '0 auto 20px' 
+            }}>
+              <span style={{ fontSize: '24px' }}>❌</span>
+            </div>
+            <h3 style={{ color: '#fff', fontSize: '20px', fontWeight: 700, marginBottom: '12px' }}>Transmission Error</h3>
+            <p style={{ color: '#94a3b8', fontSize: '14px', lineHeight: '1.6', marginBottom: '24px' }}>
+              {errorMessage}
+            </p>
+            <button
+              onClick={() => setShowErrorPopup(false)}
+              style={{
+                width: '100%', padding: '14px', background: 'rgba(239, 68, 68, 0.2)',
+                border: '1px solid rgba(239, 68, 68, 0.3)', color: '#f87171',
+                borderRadius: '14px', fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s'
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(239, 68, 68, 0.3)'}
+              onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(239, 68, 68, 0.2)'}
+            >
+              Close
+            </button>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+    </>
   );
 };
 
