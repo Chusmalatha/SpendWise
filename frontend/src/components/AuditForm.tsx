@@ -6,7 +6,6 @@ import { processAudit } from '../api/api';
 import { AI_TOOLS, PLAN_TYPES } from '../data/mockData';
 import { useNavigate } from 'react-router-dom';
 import ToolCard from './ToolCard';
-import { useLocalStorage } from '../hooks/useHooks';
 import { calculateTotals, formatCurrency } from '../utils/helpers';
 
 const EMPTY_TOOL = {
@@ -26,15 +25,17 @@ const STEPS = [
 const AuditForm = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
-  const [companyInfo, setCompanyInfo] = useLocalStorage('spendwise_company', {
+  const [companyInfo, setCompanyInfo] = useState({
     companyName: '',
     teamSize: '',
     role: '',
     email: '',
   });
-  const [tools, setTools] = useLocalStorage('spendwise_tools', [{ ...EMPTY_TOOL }]);
+  const [tools, setTools] = useState([{ ...EMPTY_TOOL }]);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showErrorPopup, setShowErrorPopup] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const totals = calculateTotals(tools);
 
@@ -94,7 +95,8 @@ const AuditForm = () => {
       navigate('/results/demo');
     } catch (error) {
       console.error(error);
-      setErrors({ tools: "Failed to connect to the server. Is it running?" });
+      setErrorMessage("We couldn't connect to our AI engine. Please check if the backend is running and try again.");
+      setShowErrorPopup(true);
       setIsSubmitting(false);
     }
   };
@@ -425,6 +427,39 @@ const AuditForm = () => {
           )}
         </motion.div>
       </div>
+
+      {/* Error Popup */}
+      <AnimatePresence>
+        {showErrorPopup && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-dark-950/80 backdrop-blur-sm"
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              className="glass-card max-w-md w-full p-8 border-red-500/20"
+            >
+              <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                <span className="text-3xl">⚠️</span>
+              </div>
+              <h3 className="text-white text-xl font-bold text-center mb-2">Connection Failed</h3>
+              <p className="text-slate-400 text-center mb-8">
+                {errorMessage}
+              </p>
+              <button
+                onClick={() => setShowErrorPopup(false)}
+                className="w-full py-4 bg-red-500/20 hover:bg-red-500/30 border border-red-500/30 text-red-300 rounded-2xl font-bold transition-all duration-200"
+              >
+                Got it
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
