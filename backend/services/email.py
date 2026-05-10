@@ -11,7 +11,7 @@ async def send_report_email(to_email: str, company: str, audit_data: dict):
 
 
     
-    if not sg_key or sg_key == "your_sendgrid_key_here":
+    if not sg_key or sg_ == "your_sendgrid_key_here":
         print(f"\n--- DUMMY EMAIL ---")
         print(f"To: {to_email}")
         print(f"Subject: Your SpendWise AI Report for {company}")
