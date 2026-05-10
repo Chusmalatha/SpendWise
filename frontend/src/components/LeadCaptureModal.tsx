@@ -56,6 +56,7 @@ const LeadCaptureModal = ({ onClose, auditData }) => {
   };
 
   return (
+    <>
     <AnimatePresence>
       {/* ── Backdrop ── */}
       <motion.div
