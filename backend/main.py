@@ -19,7 +19,7 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:5173", 
         "http://localhost:5174", 
-        os.getenv("FRONTEND_URL", "https://spend-wise-t685.vercel.app").rstrip("/")
+        os.getenv("FRONTEND_URL", "https://spend-wise-seven-lovat.vercel.app/").rstrip("/")
     ],
     allow_credentials=True,
     allow_methods=["*"],

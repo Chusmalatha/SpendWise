@@ -150,4 +150,8 @@
 - Handling Git recovery workflows using reflog and reset
 - Connecting distributed frontend and backend services in production
 
+<<<<<<< HEAD
 ---
+=======
+---
+>>>>>>> 1c3a7c52d27e9de72f5f65f01f47ac43610e7104
