@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { MdClose, MdDragIndicator } from 'react-icons/md';
-import { AI_TOOLS, PLAN_TYPES, USE_CASES } from '../data/mockData';
+import { AI_TOOLS, TOOL_PLAN_OPTIONS, DEFAULT_PLAN_OPTIONS, USE_CASES } from '../data/mockData';
 import { Tool } from '../types/types';
 
 interface ToolCardProps {
@@ -17,6 +17,21 @@ const ToolCard: React.FC<ToolCardProps> = ({ tool, index, onUpdate, onRemove, ca
   };
 
   const selectedTool = AI_TOOLS.find((t) => t.value === tool.toolName);
+  
+  // Get real plan options for the selected tool
+  const planOptions = tool.toolName
+    ? (TOOL_PLAN_OPTIONS[tool.toolName] ?? DEFAULT_PLAN_OPTIONS)
+    : DEFAULT_PLAN_OPTIONS;
+
+  // Auto-fill monthly spend when plan is selected
+  const handlePlanChange = (planValue: string) => {
+    const selectedPlan = planOptions.find((p) => p.value === planValue);
+    const updates: Partial<Tool> = { planType: planValue };
+    if (selectedPlan && selectedPlan.price > 0) {
+      updates.monthlySpend = String(selectedPlan.price);
+    }
+    onUpdate(index, { ...tool, ...updates });
+  };
 
   return (
     <motion.div
@@ -96,12 +111,12 @@ const ToolCard: React.FC<ToolCardProps> = ({ tool, index, onUpdate, onRemove, ca
           </label>
           <select
             value={tool.planType}
-            onChange={(e) => handleChange('planType', e.target.value)}
+            onChange={(e) => handlePlanChange(e.target.value)}
             id={`plan-type-${index}`}
             className="select-field"
           >
             <option value="">Select plan...</option>
-            {PLAN_TYPES.map((p) => (
+            {planOptions.map((p) => (
               <option key={p.value} value={p.value}>{p.label}</option>
             ))}
           </select>

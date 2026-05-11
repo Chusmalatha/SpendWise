@@ -150,8 +150,30 @@
 - Handling Git recovery workflows using reflog and reset
 - Connecting distributed frontend and backend services in production
 
-<<<<<<< HEAD
 ---
-=======
+
+## Day 6 — 2026-05-11
+
+**Hours worked:** 4
+
+### What I did:
+
+#### 🧠 Intelligent Spending Analysis
+- Completely overhauled the backend analyzer logic with real-world 2025/2026 pricing data.
+- Implemented four core optimization engines:
+  - **Redundancy Engine:** Identifies overlapping capabilities (e.g., paying for both Cursor and GitHub Copilot).
+  - **Tier Optimizer:** Detects single users on expensive Enterprise/Pro plans that can be downgraded.
+  - **Scale Optimizer:** Calculates savings from switching N individual seats to a unified Team plan.
+  - **Billing Optimizer:** Real-time calculation of annual vs. monthly billing savings for specific vendors.
+
+#### 🎨 Frontend Precision Enhancements
+- Updated `mockData.ts` to include granular, tool-specific plan names (e.g., ChatGPT Plus vs. Team).
+- Enhanced `ToolCard.tsx` to dynamically fetch valid plans for each tool and auto-fill real-world pricing.
+- Added new tools to the database: Notion AI, Perplexity AI, and Grammarly.
+
+### What I learned:
+- Designing complex rule engines for financial data.
+- Importance of "Small Data" (accurate pricing tables) in making AI results feel realistic and trustworthy.
+- Creating dynamic form states that react to deep nested data changes.
+
 ---
->>>>>>> 1c3a7c52d27e9de72f5f65f01f47ac43610e7104
