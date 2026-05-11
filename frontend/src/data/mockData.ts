@@ -8,13 +8,91 @@ export const AI_TOOLS = [
   { value: 'openai-api', label: 'OpenAI API', icon: '🔮', company: 'OpenAI' },
   { value: 'anthropic-api', label: 'Anthropic API', icon: '🌊', company: 'Anthropic' },
   { value: 'windsurf', label: 'Windsurf', icon: '🏄', company: 'Codeium' },
+  { value: 'notion', label: 'Notion AI', icon: '📝', company: 'Notion' },
+  { value: 'perplexity', label: 'Perplexity AI', icon: '🔭', company: 'Perplexity' },
+  { value: 'grammarly', label: 'Grammarly', icon: '✅', company: 'Grammarly' },
 ];
 
-export const PLAN_TYPES = [
-  { value: 'free', label: 'Free' },
-  { value: 'pro', label: 'Pro' },
-  { value: 'team', label: 'Team' },
-  { value: 'enterprise', label: 'Enterprise' },
+// Real per-tool plan options with actual 2025/2026 prices
+export const TOOL_PLAN_OPTIONS: Record<string, { value: string; label: string; price: number }[]> = {
+  'chatgpt': [
+    { value: 'free', label: 'Free', price: 0 },
+    { value: 'plus', label: 'Plus – $20/mo', price: 20 },
+    { value: 'pro', label: 'Pro – $200/mo', price: 200 },
+    { value: 'team', label: 'Team – $30/seat/mo', price: 30 },
+    { value: 'enterprise', label: 'Enterprise (custom)', price: 60 },
+  ],
+  'claude': [
+    { value: 'free', label: 'Free', price: 0 },
+    { value: 'pro', label: 'Pro – $20/mo', price: 20 },
+    { value: 'max', label: 'Max – $100/mo', price: 100 },
+    { value: 'team', label: 'Team – $25/seat/mo', price: 25 },
+    { value: 'team-premium', label: 'Team Premium – $125/seat/mo', price: 125 },
+    { value: 'enterprise', label: 'Enterprise (custom)', price: 20 },
+  ],
+  'cursor': [
+    { value: 'free', label: 'Free (Hobby)', price: 0 },
+    { value: 'pro', label: 'Pro – $20/mo', price: 20 },
+    { value: 'team', label: 'Team – $40/seat/mo', price: 40 },
+    { value: 'enterprise', label: 'Enterprise (custom)', price: 80 },
+  ],
+  'github-copilot': [
+    { value: 'free', label: 'Free', price: 0 },
+    { value: 'pro', label: 'Pro – $10/mo', price: 10 },
+    { value: 'pro-plus', label: 'Pro+ – $39/mo', price: 39 },
+    { value: 'business', label: 'Business – $19/seat/mo', price: 19 },
+    { value: 'enterprise', label: 'Enterprise – $39/seat/mo', price: 39 },
+  ],
+  'gemini': [
+    { value: 'free', label: 'Free', price: 0 },
+    { value: 'advanced', label: 'Advanced (AI Premium) – $20/mo', price: 20 },
+    { value: 'workspace', label: 'Workspace Business – $22/seat/mo', price: 22 },
+    { value: 'enterprise', label: 'Workspace Enterprise – $30/seat/mo', price: 30 },
+  ],
+  'windsurf': [
+    { value: 'free', label: 'Free', price: 0 },
+    { value: 'pro', label: 'Pro – $15/mo', price: 15 },
+    { value: 'team', label: 'Team – $30/seat/mo', price: 30 },
+    { value: 'enterprise', label: 'Enterprise – $60/seat/mo', price: 60 },
+  ],
+  'openai-api': [
+    { value: 'free', label: 'Free trial credits', price: 0 },
+    { value: 'pay-as-you-go', label: 'Pay-As-You-Go', price: 50 },
+    { value: 'committed', label: 'Committed (prepaid)', price: 150 },
+    { value: 'enterprise', label: 'Enterprise (custom)', price: 500 },
+  ],
+  'anthropic-api': [
+    { value: 'free', label: 'Free trial credits', price: 0 },
+    { value: 'pay-as-you-go', label: 'Pay-As-You-Go', price: 40 },
+    { value: 'committed', label: 'Committed (prepaid)', price: 120 },
+    { value: 'enterprise', label: 'Enterprise (custom)', price: 400 },
+  ],
+  'notion': [
+    { value: 'free', label: 'Free', price: 0 },
+    { value: 'plus', label: 'Plus – $12/seat/mo', price: 12 },
+    { value: 'business', label: 'Business (AI included) – $20/seat/mo', price: 20 },
+    { value: 'enterprise', label: 'Enterprise (custom)', price: 40 },
+  ],
+  'perplexity': [
+    { value: 'free', label: 'Free', price: 0 },
+    { value: 'pro', label: 'Pro – $20/mo', price: 20 },
+    { value: 'enterprise-pro', label: 'Enterprise Pro – $40/seat/mo', price: 40 },
+    { value: 'enterprise-max', label: 'Enterprise Max – $325/seat/mo', price: 325 },
+  ],
+  'grammarly': [
+    { value: 'free', label: 'Free', price: 0 },
+    { value: 'premium', label: 'Premium – $12/mo', price: 12 },
+    { value: 'business', label: 'Business – $15/seat/mo (annual)', price: 15 },
+    { value: 'enterprise', label: 'Enterprise (custom)', price: 25 },
+  ],
+};
+
+// Generic fallback plan options for unlisted tools
+export const DEFAULT_PLAN_OPTIONS = [
+  { value: 'free', label: 'Free', price: 0 },
+  { value: 'pro', label: 'Pro / Individual', price: 0 },
+  { value: 'team', label: 'Team / Business', price: 0 },
+  { value: 'enterprise', label: 'Enterprise', price: 0 },
 ];
 
 export const USE_CASES = [
@@ -26,14 +104,17 @@ export const USE_CASES = [
 ];
 
 export const PRICING_DATA = {
-  'chatgpt': { free: 0, pro: 20, team: 25, enterprise: 60 },
-  'claude': { free: 0, pro: 20, team: 25, enterprise: 60 },
-  'cursor': { free: 0, pro: 20, team: 40, enterprise: 100 },
-  'github-copilot': { free: 0, pro: 10, team: 19, enterprise: 39 },
-  'gemini': { free: 0, pro: 20, team: 24, enterprise: 50 },
-  'openai-api': { free: 0, pro: 50, team: 150, enterprise: 500 },
-  'anthropic-api': { free: 0, pro: 40, team: 120, enterprise: 400 },
-  'windsurf': { free: 0, pro: 15, team: 35, enterprise: 80 },
+  'chatgpt': { free: 0, plus: 20, pro: 200, team: 30, enterprise: 60 },
+  'claude': { free: 0, pro: 20, max: 100, team: 25, 'team-premium': 125, enterprise: 20 },
+  'cursor': { free: 0, pro: 20, team: 40, enterprise: 80 },
+  'github-copilot': { free: 0, pro: 10, 'pro-plus': 39, business: 19, enterprise: 39 },
+  'gemini': { free: 0, advanced: 20, workspace: 22, enterprise: 30 },
+  'openai-api': { free: 0, 'pay-as-you-go': 50, committed: 150, enterprise: 500 },
+  'anthropic-api': { free: 0, 'pay-as-you-go': 40, committed: 120, enterprise: 400 },
+  'windsurf': { free: 0, pro: 15, team: 30, enterprise: 60 },
+  'notion': { free: 0, plus: 12, business: 20, enterprise: 40 },
+  'perplexity': { free: 0, pro: 20, 'enterprise-pro': 40, 'enterprise-max': 325 },
+  'grammarly': { free: 0, premium: 12, business: 15, enterprise: 25 },
 };
 
 // Mock recommendations data
