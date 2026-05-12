@@ -1,92 +1,325 @@
-# SpendWise AI — Optimize Your AI Stack
+# SpendWise AI — Optimize Your AI Infrastructure Spend
 
-**SpendWise AI** is a professional-grade audit tool designed to help startups and engineering teams identify redundant AI subscriptions, optimize seat utilization, and slash their monthly burn rate.
+SpendWise AI is a full-stack AI spend auditing platform designed to help startups, engineering teams, and AI-first companies identify unnecessary AI expenses, optimize tool usage, and reduce monthly operational costs through intelligent recommendations.
 
-### 🔗 Live Demo: [https://spend-wise-seven-lovat.vercel.app/](https://spend-wise-seven-lovat.vercel.app/)
+The platform analyzes subscriptions across popular AI tools such as ChatGPT, Claude, Cursor, GitHub Copilot, Gemini, and API-based AI services, then generates a detailed optimization report with projected monthly and annual savings.
 
-![SpendWise Landing Page](file:///C:/Users/Admin/.gemini/antigravity/brain/8034c78a-bb10-4b19-af4e-37391bffd440/spendwise_landing_mockup_1778600646340.png)
-![SpendWise Dashboard](file:///C:/Users/Admin/.gemini/antigravity/brain/8034c78a-bb10-4b19-af4e-37391bffd440/spendwise_dashboard_mockup_1778600623946.png)
+---
 
-## 🚀 Overview
+## 🔗 Live Demo
 
-In the era of "AI-first" development, teams often find themselves paying for overlapping tools: ChatGPT Plus, Claude Pro, GitHub Copilot, and various API credits simultaneously. SpendWise AI analyzes your current stack and provides a data-driven optimization report in under 2 minutes.
+### Production Deployment
+https://spend-wise-seven-lovat.vercel.app/
 
-### Key Features
-- **Deterministic Audit Engine**: Precision-built logic to identify tool overlaps (e.g., ChatGPT vs. Claude) and seat-count redundancies.
-- **AI-Powered Executive Summary**: Generates a professional narrative summary of your savings using Hugging Face's LLM inference.
-- **Interactive Results Dashboard**: Beautiful, high-fidelity visualizations of your spend vs. projected savings.
-- **Email Report Integration**: Receive a detailed breakdown of your audit results directly in your inbox.
-- **PLG Viral Loop**: Shareable audit results to demonstrate savings to stakeholders.
+---
 
-## 🛠️ Tech Stack
+# 📸 Screenshots
 
-### Frontend
-- **Framework**: React 18 with Vite
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS
-- **Icons**: Lucide React
-- **Animations**: Framer Motion
-- **Charts**: Recharts
+## Landing Page
+<img src="assets/home.png" width="1000"/>
 
-### Backend
-- **Framework**: FastAPI (Python 3.10+)
-- **Database**: MongoDB (via Motor async driver)
-- **AI Integration**: Hugging Face Inference API (`google/gemma-2b-it`)
-- **Email Service**: SendGrid
-- **Validation**: Pydantic v2
+## Audit Dashboard
+<img src="assets/audit.png" width="1000"/>
 
-## 📦 Getting Started
+## Results Page
+<img src="assets/result.png" width="1000"/>
 
-### Prerequisites
-- Node.js (v18+)
-- Python (v3.10+)
-- MongoDB (Local or Atlas)
-- Hugging Face API Key
-- SendGrid API Key (Optional for email functionality)
+---
 
-### Installation
+# 🚀 Features
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/your-username/spendwise.git
-   cd spendwise
-   ```
+## Core Features
 
-2. **Backend Setup**
-   ```bash
-   cd backend
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   pip install -r requirements.txt
-   ```
-   Create a `.env` file in the `backend` directory:
-   ```env
-   MONGODB_URL=your_mongodb_connection_string
-   HUGGINGFACE_API_KEY=your_hf_key
-   SENDGRID_API_KEY=your_sendgrid_key
-   FROM_EMAIL=your_verified_sender@email.com
-   ```
+- AI tool spend auditing and optimization
+- Dynamic savings calculation engine
+- Personalized AI-generated audit summaries
+- Shareable audit result pages
+- Email report delivery
+- Interactive analytics dashboard
+- Responsive mobile-first UI
+- Persistent form state management
+- Rate-limited API endpoints
+- Real-time pricing-based recommendations
 
-3. **Frontend Setup**
-   ```bash
-   cd ../frontend
-   npm install
-   ```
-   Create a `.env` file in the `frontend` directory:
-   ```env
-   VITE_API_URL=http://localhost:8000
-   ```
+---
 
-### Running the App
+## Supported AI Platforms
 
-- **Start Backend**: `cd backend && uvicorn main:app --reload`
-- **Start Frontend**: `cd frontend && npm run dev`
+The audit engine currently supports optimization recommendations for:
 
-## 📖 Documentation
-- [Architecture Details](ARCHITECTURE.md)
-- [Pricing Data Sources](PRICING_DATA.md)
-- [Unit Economics](ECONOMICS.md)
-- [Go-To-Market Strategy](GTM.md)
+- ChatGPT
+- Claude
+- Cursor
+- GitHub Copilot
+- Gemini
+- OpenAI API
+- Anthropic API
+- Windsurf
 
-## 📄 License
-MIT License - see [LICENSE](LICENSE) for details.
+---
+
+# 🧠 How It Works
+
+1. Users enter their current AI stack information:
+   - Tools used
+   - Subscription plans
+   - Monthly spend
+   - Team size
+   - Primary use case
+
+2. The audit engine evaluates:
+   - Redundant subscriptions
+   - Overpriced plans
+   - Seat inefficiencies
+   - Better-fit alternatives
+   - Potential savings opportunities
+
+3. Users receive:
+   - Monthly savings estimate
+   - Annual savings projection
+   - Optimization recommendations
+   - AI-generated executive summary
+
+4. Results can be:
+   - Shared publicly
+   - Downloaded
+   - Sent via email
+
+---
+
+# 🛠️ Tech Stack
+
+## Frontend
+
+- React 18
+- TypeScript
+- Vite
+- Tailwind CSS
+- Framer Motion
+- Recharts
+- Lucide React
+
+---
+
+## Backend
+
+- FastAPI
+- Python 3.10+
+- MongoDB
+- Motor Async Driver
+- Pydantic v2
+
+---
+
+## AI & Integrations
+
+- Hugging Face Inference API
+- SendGrid Email Service
+
+---
+
+# 📦 Installation & Setup
+
+## Prerequisites
+
+Make sure the following are installed:
+
+- Node.js v18+
+- Python 3.10+
+- MongoDB
+- Git
+
+---
+
+# Clone Repository
+
+```bash
+git clone https://github.com/your-username/spendwise.git
+cd spendwise
+```
+
+---
+
+# Backend Setup
+
+```bash
+cd backend
+
+python -m venv venv
+
+# Windows
+venv\Scripts\activate
+
+# Mac/Linux
+source venv/bin/activate
+
+pip install -r requirements.txt
+```
+
+Create `.env` file inside `backend/`
+
+```env
+MONGODB_URL=your_mongodb_connection_string
+HUGGINGFACE_API_KEY=your_huggingface_api_key
+SENDGRID_API_KEY=your_sendgrid_api_key
+FROM_EMAIL=your_verified_email
+```
+
+Run backend server:
+
+```bash
+uvicorn main:app --reload
+```
+
+Backend runs on:
+
+```txt
+http://localhost:8000
+```
+
+---
+
+# Frontend Setup
+
+```bash
+cd frontend
+
+npm install
+```
+
+Create `.env` file inside `frontend/`
+
+```env
+VITE_API_URL=http://localhost:8000
+```
+
+Run frontend:
+
+```bash
+npm run dev
+```
+
+Frontend runs on:
+
+```txt
+http://localhost:5173
+```
+
+---
+
+# 📊 Audit Engine Logic
+
+The platform uses a deterministic rules-based audit engine instead of relying entirely on LLM outputs.
+
+The engine evaluates:
+
+- Plan-to-seat mismatch
+- Duplicate AI capabilities
+- Unnecessary enterprise subscriptions
+- Better-value alternatives
+- Cost-per-user optimization
+
+This approach ensures:
+- transparent calculations
+- predictable outputs
+- financially defensible recommendations
+
+---
+
+# 🧪 Testing
+
+Run frontend tests:
+
+```bash
+npm test
+```
+
+Run backend tests:
+
+```bash
+pytest
+```
+
+---
+
+# 📖 Project Documentation
+
+Additional project documentation:
+
+- ARCHITECTURE.md
+- PRICING_DATA.md
+- GTM.md
+- ECONOMICS.md
+- PROMPTS.md
+- REFLECTION.md
+- DEVLOG.md
+- TESTS.md
+
+---
+
+# ⚖️ Key Engineering Decisions
+
+## 1. FastAPI for Backend
+Chosen for:
+- async performance
+- clean API development
+- fast iteration speed
+- strong validation support
+
+---
+
+## 2. Deterministic Audit Logic
+The audit engine uses hardcoded business rules instead of AI-generated calculations to ensure reliable and explainable financial recommendations.
+
+---
+
+## 3. MongoDB for Flexibility
+MongoDB enables flexible storage for:
+- audit reports
+- dynamic recommendation structures
+- shareable public reports
+
+---
+
+## 4. Tailwind CSS for Rapid UI Development
+Tailwind accelerated responsive UI implementation while maintaining design consistency.
+
+---
+
+## 5. Hugging Face for AI Summaries
+Used lightweight inference APIs for generating executive-style summaries while keeping infrastructure costs low.
+
+---
+
+# 🔐 Security Considerations
+
+- Environment variables for secret management
+- Input validation using Pydantic
+- Basic abuse protection and rate limiting
+- Sanitized public share URLs
+- CORS protection configured in backend
+
+---
+
+# 📈 Future Improvements
+
+Potential future enhancements:
+
+- PDF export support
+- Multi-user organization dashboards
+- AI spend benchmarking
+- Stripe billing integration
+- Slack/Discord notifications
+- Advanced analytics and forecasting
+
+---
+
+# 👨‍💻 Author
+
+Built as part of the Credex Web Development Internship Assignment.
+
+---
+
+# 📄 License
+
+This project is licensed under the MIT License.
