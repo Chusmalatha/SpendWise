@@ -6,6 +6,7 @@
 
 ![SpendWise Landing Page](assets/landingpage.png)
 ![SpendWise Dashboard](assets/dashboard.png)
+![SpendWise Dashboard](assets/summary.png)
 
 ## 🚀 Overview
 
