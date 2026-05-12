@@ -4,8 +4,8 @@
 
 ### 🔗 Live Demo: [https://spend-wise-seven-lovat.vercel.app/](https://spend-wise-seven-lovat.vercel.app/)
 
-![SpendWise Landing Page](file:///C:/Users/Admin/.gemini/antigravity/brain/8034c78a-bb10-4b19-af4e-37391bffd440/spendwise_landing_mockup_1778600646340.png)
-![SpendWise Dashboard](file:///C:/Users/Admin/.gemini/antigravity/brain/8034c78a-bb10-4b19-af4e-37391bffd440/spendwise_dashboard_mockup_1778600623946.png)
+![SpendWise Landing Page](assets/landingpage.png)
+![SpendWise Dashboard](assets/dashboard.png)
 
 ## 🚀 Overview
 
