@@ -33,8 +33,11 @@ async def root():
 @app.post("/api/audit", response_model=AuditResponse)
 async def process_audit(request: AuditRequest):
     try:
-        # 1. Run hardcoded logic to calculate savings
-        audit_result = analyze_spend(request.tools)
+        # 1. Use pre-calculated results if provided by frontend, else run local logic
+        if request.audit_result:
+            audit_result = request.audit_result
+        else:
+            audit_result = analyze_spend(request.tools)
         
         # 2. Generate LLM summary based on the results
         summary = await generate_summary(audit_result)

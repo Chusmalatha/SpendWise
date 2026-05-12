@@ -184,25 +184,21 @@ const ToolCard: React.FC<ToolCardProps> = ({ tool, index, onUpdate, onRemove, ca
       </div>
 
       {/* Cost summary */}
-      {tool.monthlySpend && tool.seats && (
-        <motion.div
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: 'auto' }}
-          className="mt-5 pt-5 border-t border-white/5 flex items-center justify-between"
-        >
-          <span className="text-slate-500 text-sm">Total cost for this tool</span>
+      <div className="mt-5 pt-5 border-t border-white/5 overflow-hidden">
+        <div className={`flex items-center justify-between transition-all duration-500 ${tool.monthlySpend && tool.seats ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}`}>
+          <span className="text-slate-500 text-sm font-medium">Monthly commitment</span>
           <div className="flex items-center gap-4">
             <div className="text-right">
-              <div className="text-white font-bold">
-                ${(parseFloat(tool.monthlySpend) * parseInt(tool.seats || 1)).toFixed(0)}/mo
+              <div className="text-white font-bold text-lg">
+                ${(parseFloat(tool.monthlySpend) * parseInt(tool.seats || '1')).toFixed(0)}<span className="text-slate-500 text-xs font-normal">/mo</span>
               </div>
-              <div className="text-slate-500 text-xs">
-                ${(parseFloat(tool.monthlySpend) * parseInt(tool.seats || 1) * 12).toFixed(0)}/yr
+              <div className="text-slate-500 text-[10px] uppercase tracking-wider">
+                ${(parseFloat(tool.monthlySpend) * parseInt(tool.seats || '1') * 12).toFixed(0)}/yr total
               </div>
             </div>
           </div>
-        </motion.div>
-      )}
+        </div>
+      </div>
     </motion.div>
   );
 };

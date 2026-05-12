@@ -2,14 +2,14 @@ import { Tool } from '../types/types';
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
-export const processAudit = async (tools: Tool[]): Promise<any> => {
+export const processAudit = async (tools: Tool[], auditResult?: any): Promise<any> => {
   try {
     const response = await fetch(`${API_URL}/api/audit`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ tools }),
+      body: JSON.stringify({ tools, audit_result: auditResult }),
     });
 
     if (!response.ok) {
