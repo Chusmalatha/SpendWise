@@ -21,9 +21,9 @@ SpendWise AI is designed as a modern, decoupled web application. It uses a TypeS
   - `llm.py`: Manages the communication with the Hugging Face API to generate dynamic executive summaries.
 
 ### 3. Data Tier
-- **Database:** SQLite (via SQLAlchemy ORM)
-- **Role:** Stores user leads, audit submissions, and analysis results for future retrieval or sharing.
-- **Components:** `models.py` defines the schema, while `database.py` manages the connection pooling and sessions.
+- **Database:** MongoDB (via Motor async driver)
+- **Role:** Stores user leads, audit submissions, and analysis results for persistent tracking and lead generation.
+- **Components:** `models.py` defines the Pydantic schemas, while `database.py` manages the asynchronous connection to MongoDB.
 
 ### 4. External Integrations
 - **AI / LLM:** Hugging Face Inference API (`google/gemma-2b-it`). Used to inject personalized, analytical insights into the final report.
@@ -32,8 +32,8 @@ SpendWise AI is designed as a modern, decoupled web application. It uses a TypeS
 1. **User Input:** The user fills out the audit form on the React frontend.
 2. **Submission:** Data is sent via POST request to the FastAPI backend.
 3. **Processing:**
-   - The backend stores the raw data in the SQLite database.
-   - The `analyzer` service processes the data to find savings.
-   - The `llm` service generates an executive summary.
+   - The backend stores the raw data in the MongoDB collection.
+   - The `analyzer` service processes the data to find savings using deterministic rules.
+   - The `llm` service generates an executive summary via Hugging Face.
 4. **Response:** The finalized audit result is returned to the frontend and displayed on the Results Dashboard.
 5. **Follow-up:** An email containing the summary and a shareable link is dispatched via the `email` service.
