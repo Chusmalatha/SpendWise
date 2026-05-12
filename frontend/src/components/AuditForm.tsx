@@ -9,6 +9,7 @@ import {
 import { HiSparkles } from 'react-icons/hi';
 import { useNavigate } from 'react-router-dom';
 
+import { runAudit, ToolInput } from '../utils/auditEngine';
 import { processAudit } from '../api/api';
 import ToolCard from './ToolCard';
 import { calculateTotals, formatCurrency } from '../utils/helpers';
@@ -128,13 +129,33 @@ const AuditForm = () => {
     setIsSubmitting(true);
 
     try {
-      const result = await processAudit(
-        tools.filter((t) => t.toolName)
+      // 1. Prepare inputs for deterministic engine
+      const toolInputs: ToolInput[] = tools
+        .filter((t) => t.toolName)
+        .map((t) => ({
+          toolName: t.toolName,
+          planType: t.planType,
+          monthlySpend: parseFloat(t.monthlySpend) || 0,
+          seats: parseInt(t.seats) || 1,
+          useCase: t.useCase,
+        }));
+
+      // 2. Run deterministic audit locally
+      const auditResult = runAudit(toolInputs);
+
+      // 3. Call backend to get the AI Summary
+      // We pass the deterministic result to the backend so the LLM can generate a summary based on it
+      const backendResponse = await processAudit(
+        tools.filter((t) => t.toolName),
+        auditResult
       );
+
+      // 4. Merge results: Use the result returned by backend (which now includes our deterministic data + AI summary)
+      const finalResult = backendResponse;
 
       localStorage.setItem(
         'spendwise_audit_result',
-        JSON.stringify(result)
+        JSON.stringify(finalResult)
       );
 
       navigate('/results/demo');
@@ -219,233 +240,238 @@ const AuditForm = () => {
         </motion.div>
 
         {/* Step Content */}
-        <AnimatePresence mode="wait">
-          {step === 1 && (
-            <motion.div
-              key="step1"
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -30 }}
-            >
-              <div className="glass-card p-8">
-                <h2 className="text-white text-xl font-semibold mb-6 flex items-center gap-2">
-                   <span>🏢</span> Company Information
-                </h2>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  <div className="md:col-span-2">
-                    <label className="block text-slate-400 text-xs font-medium mb-2 uppercase tracking-wider">
-                      Work Email *
-                    </label>
-                    <input
-                      type="email"
-                      value={companyInfo.email}
-                      onChange={(e) => setCompanyInfo({ ...companyInfo, email: e.target.value })}
-                      placeholder="you@company.com"
-                      id="audit-email"
-                      className={`input-field ${errors.email ? 'border-red-500/50' : ''}`}
-                    />
-                    {errors.email && <p className="text-red-400 text-xs mt-1">{errors.email}</p>}
-                  </div>
-                  <div>
-                    <label className="block text-slate-400 text-xs font-medium mb-2 uppercase tracking-wider">
-                      Company Name *
-                    </label>
-                    <input
-                      type="text"
-                      value={companyInfo.companyName}
-                      onChange={(e) => setCompanyInfo({ ...companyInfo, companyName: e.target.value })}
-                      placeholder="Acme Corp"
-                      id="audit-company"
-                      className={`input-field ${errors.companyName ? 'border-red-500/50' : ''}`}
-                    />
-                    {errors.companyName && <p className="text-red-400 text-xs mt-1">{errors.companyName}</p>}
-                  </div>
-                  <div>
-                    <label className="block text-slate-400 text-xs font-medium mb-2 uppercase tracking-wider">
-                      Your Role
-                    </label>
-                    <select
-                      value={companyInfo.role}
-                      onChange={(e) => setCompanyInfo({ ...companyInfo, role: e.target.value })}
-                      id="audit-role"
-                      className="select-field"
-                    >
-                      <option value="">Select your role...</option>
-                      {['Founder/CEO', 'CTO', 'Engineering Lead', 'Developer', 'Product Manager', 'Indie Hacker', 'Other'].map((r) => (
-                        <option key={r} value={r}>{r}</option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="md:col-span-2">
-                    <label className="block text-slate-400 text-xs font-medium mb-2 uppercase tracking-wider">
-                      Team Size *
-                    </label>
-                    <div className="grid grid-cols-5 gap-2">
-                      {['1', '2-5', '6-15', '16-50', '51+'].map((size) => (
-                        <button
-                          key={size}
-                          type="button"
-                          id={`team-size-${size}`}
-                          onClick={() => setCompanyInfo({ ...companyInfo, teamSize: size })}
-                          className={`py-3 rounded-xl border text-sm font-medium transition-all duration-200 ${
-                            companyInfo.teamSize === size
-                              ? 'bg-indigo-500/20 border-indigo-500/50 text-indigo-300'
-                              : 'bg-white/3 border-white/8 text-slate-400 hover:border-white/20'
-                          }`}
-                        >
-                          {size}
-                        </button>
-                      ))}
-                    </div>
-                    {errors.teamSize && <p className="text-red-400 text-xs mt-1">{errors.teamSize}</p>}
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          )}
-
-          {step === 2 && (
-            <motion.div
-              key="step2"
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -30 }}
-            >
-              {totals.totalMonthly > 0 && (
-                <motion.div className="glass border border-white/10 rounded-2xl p-4 mb-5 flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-indigo-500/20 flex items-center justify-center">
-                      <MdInfo className="text-indigo-400" />
-                    </div>
-
-                    <span className="text-slate-400 text-sm">
-                      Total tracked spend
-                    </span>
-                  </div>
-
-                  <div className="text-right">
-                    <div className="text-white font-bold">
-                      {formatCurrency(totals.totalMonthly)}/mo
-                    </div>
-
-                    <div className="text-slate-500 text-xs">
-                      {formatCurrency(totals.totalAnnual)}/yr
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-
-              {errors.tools && (
-                <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 mb-4 text-red-400 text-sm">
-                  {errors.tools}
-                </div>
-              )}
-
-              <AnimatePresence>
-                {tools.map((tool, i) => (
-                  <motion.div
-                    key={i}
-                    className="mb-4"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                  >
-                    <ToolCard
-                      tool={tool}
-                      index={i}
-                      onUpdate={updateTool}
-                      onRemove={removeTool}
-                      canRemove={tools.length > 1}
-                    />
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-
-              <motion.button
-                onClick={addTool}
-                whileHover={{ scale: 1.01 }}
-                whileTap={{ scale: 0.99 }}
-                className="w-full py-4 rounded-2xl border-2 border-dashed border-white/15 text-slate-400 hover:text-white transition-all duration-300 flex items-center justify-center gap-2 font-medium"
+        <div className="min-h-[460px]">
+          <AnimatePresence mode="wait">
+            {step === 1 && (
+              <motion.div
+                key="step1"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.3 }}
               >
-                <MdAdd size={20} />
-                Add Another AI Tool
-              </motion.button>
-            </motion.div>
-          )}
+                <div className="glass-card p-8">
+                  <h2 className="text-white text-xl font-semibold mb-6 flex items-center gap-2">
+                    <span>🏢</span> Company Information
+                  </h2>
 
-          {step === 3 && (
-            <motion.div
-              key="step3"
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -30 }}
-            >
-              <div className="glass-card p-8 mb-5">
-                <h2 className="text-white font-semibold text-xl mb-6 flex items-center gap-2">
-                  <span>✅</span> Review Your Audit
-                </h2>
-
-                {/* Company summary */}
-                <div className="mb-6 p-4 bg-white/3 rounded-xl border border-white/8">
-                  <h3 className="text-slate-400 text-xs uppercase tracking-wider mb-3">Company</h3>
-                  <div className="grid grid-cols-2 gap-3 text-sm">
-                    <div>
-                      <span className="text-slate-500">Company:</span>{' '}
-                      <span className="text-white">{companyInfo.companyName || '—'}</span>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div className="md:col-span-2">
+                      <label className="block text-slate-400 text-xs font-medium mb-2 uppercase tracking-wider">
+                        Work Email *
+                      </label>
+                      <input
+                        type="email"
+                        value={companyInfo.email}
+                        onChange={(e) => setCompanyInfo({ ...companyInfo, email: e.target.value })}
+                        placeholder="you@company.com"
+                        id="audit-email"
+                        className={`input-field ${errors.email ? 'border-red-500/50' : ''}`}
+                      />
+                      {errors.email && <p className="text-red-400 text-xs mt-1">{errors.email}</p>}
                     </div>
                     <div>
-                      <span className="text-slate-500">Team Size:</span>{' '}
-                      <span className="text-white">{companyInfo.teamSize || '—'}</span>
+                      <label className="block text-slate-400 text-xs font-medium mb-2 uppercase tracking-wider">
+                        Company Name *
+                      </label>
+                      <input
+                        type="text"
+                        value={companyInfo.companyName}
+                        onChange={(e) => setCompanyInfo({ ...companyInfo, companyName: e.target.value })}
+                        placeholder="Acme Corp"
+                        id="audit-company"
+                        className={`input-field ${errors.companyName ? 'border-red-500/50' : ''}`}
+                      />
+                      {errors.companyName && <p className="text-red-400 text-xs mt-1">{errors.companyName}</p>}
                     </div>
                     <div>
-                      <span className="text-slate-500">Role:</span>{' '}
-                      <span className="text-white">{companyInfo.role || '—'}</span>
+                      <label className="block text-slate-400 text-xs font-medium mb-2 uppercase tracking-wider">
+                        Your Role
+                      </label>
+                      <select
+                        value={companyInfo.role}
+                        onChange={(e) => setCompanyInfo({ ...companyInfo, role: e.target.value })}
+                        id="audit-role"
+                        className="select-field"
+                      >
+                        <option value="">Select your role...</option>
+                        {['Founder/CEO', 'CTO', 'Engineering Lead', 'Developer', 'Product Manager', 'Indie Hacker', 'Other'].map((r) => (
+                          <option key={r} value={r}>{r}</option>
+                        ))}
+                      </select>
                     </div>
-                    <div>
-                      <span className="text-slate-500">Email:</span>{' '}
-                      <span className="text-white">{companyInfo.email}</span>
+                    <div className="md:col-span-2">
+                      <label className="block text-slate-400 text-xs font-medium mb-2 uppercase tracking-wider">
+                        Team Size *
+                      </label>
+                      <div className="grid grid-cols-5 gap-2">
+                        {['1', '2-5', '6-15', '16-50', '51+'].map((size) => (
+                          <button
+                            key={size}
+                            type="button"
+                            id={`team-size-${size}`}
+                            onClick={() => setCompanyInfo({ ...companyInfo, teamSize: size })}
+                            className={`py-3 rounded-xl border text-sm font-medium transition-all duration-200 ${
+                              companyInfo.teamSize === size
+                                ? 'bg-indigo-500/20 border-indigo-500/50 text-indigo-300'
+                                : 'bg-white/3 border-white/8 text-slate-400 hover:border-white/20'
+                            }`}
+                          >
+                            {size}
+                          </button>
+                        ))}
+                      </div>
+                      {errors.teamSize && <p className="text-red-400 text-xs mt-1">{errors.teamSize}</p>}
                     </div>
                   </div>
                 </div>
+              </motion.div>
+            )}
 
-                {/* Tools summary */}
-                <div className="space-y-2 mb-6">
-                  <h3 className="text-slate-400 text-xs uppercase tracking-wider mb-3">Tools ({tools.filter(t => t.toolName).length})</h3>
-                  {tools.filter(t => t.toolName).map((tool, i) => (
-                    <div key={i} className="flex items-center justify-between p-3 bg-white/3 rounded-xl border border-white/5">
-                      <span className="text-slate-300 text-sm font-medium capitalize">{tool.toolName.replace('-', ' ')}</span>
-                      <div className="flex items-center gap-3">
-                        <span className="text-slate-500 text-xs capitalize">{tool.planType} · {tool.seats} seat(s)</span>
-                        <span className="text-white font-semibold text-sm">
-                          ${(parseFloat(tool.monthlySpend) * parseInt(tool.seats || '1')).toFixed(0)}/mo
-                        </span>
+            {step === 2 && (
+              <motion.div
+                key="step2"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.3 }}
+              >
+                {totals.totalMonthly > 0 && (
+                  <motion.div className="glass border border-white/10 rounded-2xl p-4 mb-5 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-lg bg-indigo-500/20 flex items-center justify-center">
+                        <MdInfo className="text-indigo-400" />
+                      </div>
+
+                      <span className="text-slate-400 text-sm">
+                        Total tracked spend
+                      </span>
+                    </div>
+
+                    <div className="text-right">
+                      <div className="text-white font-bold">
+                        {formatCurrency(totals.totalMonthly)}/mo
+                      </div>
+
+                      <div className="text-slate-500 text-xs">
+                        {formatCurrency(totals.totalAnnual)}/yr
                       </div>
                     </div>
+                  </motion.div>
+                )}
+
+                {errors.tools && (
+                  <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 mb-4 text-red-400 text-sm">
+                    {errors.tools}
+                  </div>
+                )}
+
+                <AnimatePresence mode="popLayout">
+                  {tools.map((tool, i) => (
+                    <motion.div
+                      key={i}
+                      className="mb-4"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                    >
+                      <ToolCard
+                        tool={tool}
+                        index={i}
+                        onUpdate={updateTool}
+                        onRemove={removeTool}
+                        canRemove={tools.length > 1}
+                      />
+                    </motion.div>
                   ))}
+                </AnimatePresence>
+
+                <motion.button
+                  onClick={addTool}
+                  whileHover={{ scale: 1.01 }}
+                  whileTap={{ scale: 0.99 }}
+                  className="w-full py-4 rounded-2xl border-2 border-dashed border-white/15 text-slate-400 hover:text-white transition-all duration-300 flex items-center justify-center gap-2 font-medium"
+                >
+                  <MdAdd size={20} />
+                  Add Another AI Tool
+                </motion.button>
+              </motion.div>
+            )}
+
+            {step === 3 && (
+              <motion.div
+                key="step3"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.3 }}
+              >
+                <div className="glass-card p-8 mb-5">
+                  <h2 className="text-white font-semibold text-xl mb-6 flex items-center gap-2">
+                    <span>✅</span> Review Your Audit
+                  </h2>
+
+                  {/* Company summary */}
+                  <div className="mb-6 p-4 bg-white/3 rounded-xl border border-white/8">
+                    <h3 className="text-slate-400 text-xs uppercase tracking-wider mb-3">Company</h3>
+                    <div className="grid grid-cols-2 gap-3 text-sm">
+                      <div>
+                        <span className="text-slate-500">Company:</span>{' '}
+                        <span className="text-white">{companyInfo.companyName || '—'}</span>
+                      </div>
+                      <div>
+                        <span className="text-slate-500">Team Size:</span>{' '}
+                        <span className="text-white">{companyInfo.teamSize || '—'}</span>
+                      </div>
+                      <div>
+                        <span className="text-slate-500">Role:</span>{' '}
+                        <span className="text-white">{companyInfo.role || '—'}</span>
+                      </div>
+                      <div>
+                        <span className="text-slate-500">Email:</span>{' '}
+                        <span className="text-white">{companyInfo.email}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Tools summary */}
+                  <div className="space-y-2 mb-6">
+                    <h3 className="text-slate-400 text-xs uppercase tracking-wider mb-3">Tools ({tools.filter(t => t.toolName).length})</h3>
+                    {tools.filter(t => t.toolName).map((tool, i) => (
+                      <div key={i} className="flex items-center justify-between p-3 bg-white/3 rounded-xl border border-white/5">
+                        <span className="text-slate-300 text-sm font-medium capitalize">{tool.toolName.replace('-', ' ')}</span>
+                        <div className="flex items-center gap-3">
+                          <span className="text-slate-500 text-xs capitalize">{tool.planType} · {tool.seats} seat(s)</span>
+                          <span className="text-white font-semibold text-sm">
+                            ${(parseFloat(tool.monthlySpend) * parseInt(tool.seats || '1')).toFixed(0)}/mo
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Totals */}
+                  <div className="bg-gradient-to-r from-indigo-500/10 to-purple-500/10 border border-indigo-500/20 rounded-2xl p-5 flex items-center justify-between">
+                    <div>
+                      <div className="text-slate-400 text-sm">Total Monthly Spend</div>
+                      <div className="text-3xl font-bold text-white mt-1">{formatCurrency(totals.totalMonthly)}</div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-slate-400 text-sm">Total Annual Spend</div>
+                      <div className="text-3xl font-bold gradient-text mt-1">{formatCurrency(totals.totalAnnual)}</div>
+                    </div>
+                  </div>
                 </div>
 
-                {/* Totals */}
-                <div className="bg-gradient-to-r from-indigo-500/10 to-purple-500/10 border border-indigo-500/20 rounded-2xl p-5 flex items-center justify-between">
-                  <div>
-                    <div className="text-slate-400 text-sm">Total Monthly Spend</div>
-                    <div className="text-3xl font-bold text-white mt-1">{formatCurrency(totals.totalMonthly)}</div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-slate-400 text-sm">Total Annual Spend</div>
-                    <div className="text-3xl font-bold gradient-text mt-1">{formatCurrency(totals.totalAnnual)}</div>
-                  </div>
+                {/* Privacy note */}
+                <div className="flex items-start gap-3 p-4 bg-white/2 border border-white/5 rounded-xl text-slate-400 text-sm mb-5">
+                  <span className="text-lg">🔒</span>
+                  <span>Your data is encrypted and never shared with AI tool vendors. Results are generated locally and privately.</span>
                 </div>
-              </div>
-
-              {/* Privacy note */}
-              <div className="flex items-start gap-3 p-4 bg-white/2 border border-white/5 rounded-xl text-slate-400 text-sm mb-5">
-                <span className="text-lg">🔒</span>
-                <span>Your data is encrypted and never shared with AI tool vendors. Results are generated locally and privately.</span>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
 
         {/* Navigation */}
         <motion.div className="flex items-center justify-between mt-6">

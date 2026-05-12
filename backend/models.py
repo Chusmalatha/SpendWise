@@ -10,6 +10,7 @@ class ToolInput(BaseModel):
 
 class AuditRequest(BaseModel):
     tools: List[ToolInput]
+    audit_result: Optional[dict] = None
 
 
 class ActionItem(BaseModel):
@@ -21,19 +22,23 @@ class ActionItem(BaseModel):
 class Recommendation(BaseModel):
     id: int
     currentTool: str
+    currentPlanLabel: Optional[str] = ""
     currentCost: int
     recommendedTool: str
+    recommendedPlanLabel: Optional[str] = ""
     recommendedCost: int
     savings: int
     reason: str
     savingsPercent: int
     quality: str
     tags: List[str]
+    priority: Optional[str] = "medium"
 
 class SpendItem(BaseModel):
     name: str
     spend: int
     recommended: int
+    category: Optional[str] = ""
 
 class AuditResponse(BaseModel):
     totalMonthlySpend: int

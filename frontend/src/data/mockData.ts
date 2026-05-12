@@ -103,18 +103,63 @@ export const USE_CASES = [
   { value: 'mixed', label: 'Mixed', icon: '🎯' },
 ];
 
-export const PRICING_DATA = {
-  'chatgpt': { free: 0, plus: 20, pro: 200, team: 30, enterprise: 60 },
-  'claude': { free: 0, pro: 20, max: 100, team: 25, 'team-premium': 125, enterprise: 20 },
-  'cursor': { free: 0, pro: 20, team: 40, enterprise: 80 },
-  'github-copilot': { free: 0, pro: 10, 'pro-plus': 39, business: 19, enterprise: 39 },
-  'gemini': { free: 0, advanced: 20, workspace: 22, enterprise: 30 },
-  'openai-api': { free: 0, 'pay-as-you-go': 50, committed: 150, enterprise: 500 },
-  'anthropic-api': { free: 0, 'pay-as-you-go': 40, committed: 120, enterprise: 400 },
-  'windsurf': { free: 0, pro: 15, team: 30, enterprise: 60 },
-  'notion': { free: 0, plus: 12, business: 20, enterprise: 40 },
-  'perplexity': { free: 0, pro: 20, 'enterprise-pro': 40, 'enterprise-max': 325 },
-  'grammarly': { free: 0, premium: 12, business: 15, enterprise: 25 },
+// Verified May 2026 from official pricing pages
+export const PRICING_DATA: Record<string, Record<string, number>> = {
+  'cursor': {
+    free: 0,       // Hobby — cursor.com/pricing
+    pro: 20,       // Pro — cursor.com/pricing
+    'pro-plus': 60,// Pro+ — cursor.com/pricing
+    ultra: 200,    // Ultra — cursor.com/pricing
+    team: 40,      // Teams — cursor.com/pricing
+    enterprise: 80,// Enterprise (estimate) — cursor.com/pricing
+  },
+  'github-copilot': {
+    free: 0,       // github.com/features/copilot/plans
+    pro: 10,       // Copilot Pro — docs.github.com
+    'pro-plus': 39,// Copilot Pro+ — docs.github.com
+    business: 19,  // Business — docs.github.com
+    enterprise: 39,// Enterprise — docs.github.com
+  },
+  'claude': {
+    free: 0,       // claude.com/pricing
+    pro: 20,       // claude.com/pricing
+    max5x: 100,    // Max 5x — claude.com/pricing
+    max20x: 200,   // Max 20x — claude.com/pricing
+    team: 25,      // Team Standard — claude.com/pricing
+    'team-premium': 125, // Team Premium — claude.com/pricing
+    enterprise: 0, // Custom — contact sales
+  },
+  'chatgpt': {
+    free: 0,       // chatgpt.com/pricing
+    go: 8,         // Go — chatgpt.com/pricing (global Jan 2026)
+    plus: 20,      // Plus — chatgpt.com/pricing
+    pro100: 100,   // Pro $100 — chatgpt.com/pricing (Apr 2026)
+    pro200: 200,   // Pro $200 — chatgpt.com/pricing
+    business: 30,  // Business (monthly) — openai.com/business/chatgpt-pricing
+    enterprise: 0, // Custom
+  },
+  'windsurf': {
+    free: 0,
+    pro: 15,
+    team: 30,
+    enterprise: 60,
+  },
+  'gemini': {
+    free: 0,
+    advanced: 20,
+    workspace: 22,
+    enterprise: 30,
+  },
+  'openai-api': {
+    'pay-as-you-go': 50,   // estimated avg
+    committed: 150,
+    enterprise: 400,
+  },
+  'anthropic-api': {
+    'pay-as-you-go': 40,
+    committed: 120,
+    enterprise: 400,
+  },
 };
 
 // Mock recommendations data
