@@ -158,7 +158,7 @@ const AuditForm = () => {
         JSON.stringify(finalResult)
       );
 
-      navigate('/results/demo');
+      navigate('/results/latest');
     } catch (error) {
       console.error(error);
 

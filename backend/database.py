@@ -15,3 +15,9 @@ async def save_lead(lead_data: dict):
     collection = db["leads"]
     result = await collection.insert_one(lead_data)
     return str(result.inserted_id)
+
+async def get_lead(lead_id: str):
+    """Fetch lead/audit data by ID"""
+    from bson import ObjectId
+    collection = db["leads"]
+    return await collection.find_one({"_id": ObjectId(lead_id)})

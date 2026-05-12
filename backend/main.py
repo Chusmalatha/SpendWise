@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from models import AuditRequest, AuditResponse, LeadCaptureRequest, LeadCaptureResponse
-from database import save_lead
+from database import save_lead, get_lead
 from services.analyzer import analyze_spend
 from services.llm import generate_summary
 from services.email import send_report_email
@@ -45,6 +45,19 @@ async def process_audit(request: AuditRequest):
         
         return audit_result
     except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/audit/{audit_id}")
+async def get_audit_result(audit_id: str):
+    try:
+        result = await get_lead(audit_id)
+        if not result:
+            raise HTTPException(status_code=404, detail="Audit result not found")
+        
+        # Extract the auditData part which matches AuditResponse
+        return result.get("auditData")
+    except Exception as e:
+        if "404" in str(e): raise
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/api/report/email", response_model=LeadCaptureResponse)
