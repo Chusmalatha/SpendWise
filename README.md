@@ -2,7 +2,10 @@
 
 **SpendWise AI** is a professional-grade audit tool designed to help startups and engineering teams identify redundant AI subscriptions, optimize seat utilization, and slash their monthly burn rate.
 
-![SpendWise Hero](https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=2070)
+### 🔗 Live Demo: [https://spend-wise-seven-lovat.vercel.app/](https://spend-wise-seven-lovat.vercel.app/)
+
+![SpendWise Landing Page](file:///C:/Users/Admin/.gemini/antigravity/brain/8034c78a-bb10-4b19-af4e-37391bffd440/spendwise_landing_mockup_1778600646340.png)
+![SpendWise Dashboard](file:///C:/Users/Admin/.gemini/antigravity/brain/8034c78a-bb10-4b19-af4e-37391bffd440/spendwise_dashboard_mockup_1778600623946.png)
 
 ## 🚀 Overview
 

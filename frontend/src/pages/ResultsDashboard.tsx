@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
+import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
-
 import {
   MdInsights,
   MdShare,
@@ -11,9 +10,7 @@ import {
   MdArrowForward,
   MdBarChart,
 } from 'react-icons/md';
-
 import { HiSparkles } from 'react-icons/hi';
-
 import {
   BarChart,
   Bar,
@@ -31,6 +28,7 @@ import SummaryCard from '../components/SummaryCard';
 import LeadCaptureModal from '../components/LeadCaptureModal';
 
 import { formatCurrency } from '../utils/helpers';
+import { MOCK_DASHBOARD_DATA } from '../data/mockData';
 
 // Animated Counter
 const AnimatedCounter = ({
@@ -108,12 +106,24 @@ const CustomTooltip = ({ active, payload, label }) => {
 };
 
 const ResultsDashboard = () => {
+  const { id } = useParams();
   const [copied, setCopied] = useState(false);
   const [showLeadModal, setShowLeadModal] = useState(false);
 
-  // Read from localStorage
+  // Read from localStorage or use mock data if it's a demo
   const [data] = useState(() => {
+    // If explicit demo, or if no local data exists and we are at /results/demo
+    if (id === 'demo') {
+      return MOCK_DASHBOARD_DATA;
+    }
+    
     const saved = localStorage.getItem('spendwise_audit_result');
+    
+    // If no saved data and we are at /results/latest, fallback to demo so it's not empty
+    if (!saved && id === 'latest') {
+      return MOCK_DASHBOARD_DATA;
+    }
+    
     return saved ? JSON.parse(saved) : null;
   });
 

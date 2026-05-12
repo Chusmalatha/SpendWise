@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { MdShare, MdContentCopy, MdCheck, MdTrendingDown, MdArrowForward } from 'react-icons/md';
@@ -10,17 +10,71 @@ import Navbar from '../components/Navbar';
 import ResultCard from '../components/ResultCard';
 import { MOCK_DASHBOARD_DATA } from '../data/mockData';
 import { formatCurrency } from '../utils/helpers';
+import { fetchAudit } from '../api/api';
 
 const ShareableResult = () => {
   const { id } = useParams();
   const [copied, setCopied] = useState(false);
-  const data = MOCK_DASHBOARD_DATA;
+  const [data, setData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    const loadResult = async () => {
+      if (!id) return;
+      
+      // Special case for demo
+      if (id === 'demo') {
+        setData(MOCK_DASHBOARD_DATA);
+        setLoading(false);
+        return;
+      }
+
+      try {
+        setLoading(true);
+        const result = await fetchAudit(id);
+        setData(result);
+        setLoading(false);
+      } catch (err) {
+        console.error("Failed to fetch shared result:", err);
+        setError(true);
+        setLoading(false);
+      }
+    };
+
+    loadResult();
+  }, [id]);
 
   const copyLink = () => {
     navigator.clipboard.writeText(window.location.href);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
+
+  if (loading) {
+    return (
+      <div className="bg-dark-900 min-h-screen flex items-center justify-center">
+        <motion.div 
+          animate={{ rotate: 360 }}
+          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+          className="w-12 h-12 border-4 border-indigo-500/30 border-t-indigo-500 rounded-full"
+        />
+      </div>
+    );
+  }
+
+  if (error || !data) {
+    return (
+      <div className="bg-dark-900 min-h-screen flex items-center justify-center text-center px-4">
+        <div>
+          <div className="text-6xl mb-6">🏜️</div>
+          <h2 className="text-white text-2xl font-bold mb-4">Report Not Found</h2>
+          <p className="text-slate-400 mb-8 max-w-md">This report may have expired or the link is incorrect.</p>
+          <Link to="/audit" className="btn-primary">Run Your Own Audit</Link>
+        </div>
+      </div>
+    );
+  }
 
   const totalSavingsPercent = Math.round((data.projectedMonthlySavings / data.totalMonthlySpend) * 100);
 

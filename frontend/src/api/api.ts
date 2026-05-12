@@ -23,6 +23,19 @@ export const processAudit = async (tools: Tool[], auditResult?: any): Promise<an
   }
 };
 
+export const fetchAudit = async (auditId: string): Promise<any> => {
+  try {
+    const response = await fetch(`${API_URL}/api/audit/${auditId}`);
+    if (!response.ok) {
+      throw new Error("Audit not found");
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("API Error:", error);
+    throw error;
+  }
+};
+
 export const captureLeadAndEmail = async (
   email: string,
   company: string,
