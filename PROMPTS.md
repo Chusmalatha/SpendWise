@@ -1,7 +1,11 @@
-# SpendWise AI — System Prompt
+# SpendWise AI — System Prompts
 
-Below is the primary prompt used to interface with the Hugging Face API (`google/gemma-2b-it`) within the `llm.py` service. This prompt is dynamically formatted with the user's specific audit metrics before being sent to the LLM.
+SpendWise AI uses a strictly deterministic engine for calculations and relies on Large Language Models (LLMs) only for qualitative narrative generation. This ensures 100% financial accuracy while providing a premium, human-readable experience.
 
+## Executive Summary Prompt
+**Model**: `google/gemma-2b-it` (Hugging Face Inference API)
+
+### Prompt Template
 ```text
 Act as a senior financial analyst and AI consultant. Write a professional, detailed Executive Summary for an AI tool spend audit.
 
@@ -18,7 +22,8 @@ Format requirements:
 - Do NOT use markdown formatting like asterisks or bold text.
 ```
 
-## Prompt Design Strategy
-- **Role Definition:** Instructs the LLM to adopt a "senior financial analyst" persona, ensuring the tone matches an enterprise B2B product.
-- **Data Injection:** We explicitly pass exactly which variables must be included to ground the LLM's response and prevent hallucination.
-- **Formatting Constraints:** We explicitly limit the length and restrict markdown formatting to ensure the output renders cleanly inside our UI components.
+## Strategy & Guardrails
+1. **No Math in LLM**: We never ask the LLM to calculate savings. All variables (spend, savings, tool counts) are pre-calculated by the Python backend and injected into the prompt.
+2. **Plain Text Response**: We explicitly disable markdown in the prompt to ensure the output renders consistently within our UI components without unexpected formatting breaks.
+3. **Professional Persona**: The "Senior Financial Analyst" persona ensures the tone is appropriate for B2B stakeholders and CTOs.
+4. **Fallback Mechanism**: If the LLM API is unavailable, the system utilizes a high-quality template-based generator to ensure the user always receives a summary.
