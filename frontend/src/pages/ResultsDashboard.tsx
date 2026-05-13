@@ -197,7 +197,7 @@ const ResultsDashboard = () => {
   ];
 
   return (
-    <div className="bg-dark-900 min-h-screen overflow-hidden">
+    <div className="bg-dark-900 min-h-screen overflow-x-hidden">
       <Navbar />
 
       <div
@@ -314,9 +314,9 @@ const ResultsDashboard = () => {
         {/* MAIN DASHBOARD */}
         <div className="flex flex-col xl:flex-row gap-8 items-start">
           {/* LEFT */}
-          <div className="space-y-6 min-w-0 flex-1 w-full">
+          <div className="min-w-0 flex-1">
             {/* Left Header */}
-            <div className="flex items-center justify-between px-1 min-h-[48px]">
+            <div className="flex items-center justify-between px-1 min-h-[48px] mb-6">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-xl bg-indigo-500/20 flex items-center justify-center text-indigo-400">
                   <MdInsights size={20} />
@@ -332,32 +332,36 @@ const ResultsDashboard = () => {
               </div>
             </div>
 
-            {/* Cards */}
-            <div className="space-y-4">
-  {/* First card stays beside chart */}
-  {data.recommendations[0] && (
-    <ResultCard
-      key={data.recommendations[0].id}
-      rec={data.recommendations[0]}
-      index={0}
-    />
-  )}
-
-  {/* Remaining cards full width */}
-  {data.recommendations.slice(1).length > 0 && (
-    <div className="xl:w-[calc(100vw-140px)] xl:max-w-none">
-      <div className="space-y-4">
-        {data.recommendations.slice(1).map((rec, i) => (
-          <ResultCard
-            key={rec.id}
-            rec={rec}
-            index={i + 1}
-          />
-        ))}
-      </div>
-    </div>
-  )}
-</div>
+            {/* First card stays beside chart */}
+            {data.recommendations.length > 0 ? (
+              <ResultCard
+                key={data.recommendations[0].id}
+                rec={data.recommendations[0]}
+                index={0}
+              />
+            ) : (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="glass-card p-10 border-green-500/20 bg-green-500/5 text-center flex flex-col items-center justify-center min-h-[300px]"
+              >
+                <div className="w-16 h-16 rounded-full bg-green-500/10 flex items-center justify-center mb-6">
+                  <MdCheck className="text-3xl text-green-400" />
+                </div>
+                
+                <h3 className="text-white font-bold text-xl mb-3">Your Stack is Optimized</h3>
+                
+                <p className="text-slate-400 text-sm max-w-xs leading-relaxed">
+                  Great job! We analyzed your tools and couldn't find any immediate overpayments or redundancies. You're already using the most cost-effective plans for your scale.
+                </p>
+                
+                <div className="mt-8 flex gap-3">
+                  <div className="px-3 py-1 rounded-full bg-green-500/10 border border-green-500/20 text-green-400 text-[10px] font-bold uppercase tracking-wider">
+                    Maximum Efficiency
+                  </div>
+                </div>
+              </motion.div>
+            )}
           </div>
 
           {/* RIGHT */}
@@ -566,6 +570,25 @@ const ResultsDashboard = () => {
             )}
           </div>
         </div>
+
+        {/* REMAINING RECOMMENDATIONS */}
+        {data.recommendations.slice(1).length > 0 && (
+          <div className="mt-12 space-y-4">
+            <h3 className="text-white/50 text-xs font-bold uppercase tracking-[0.2em] px-1 mb-6">
+              Additional Optimization Steps
+            </h3>
+            
+            <div className="space-y-4">
+              {data.recommendations.slice(1).map((rec, i) => (
+                <ResultCard
+                  key={rec.id}
+                  rec={rec}
+                  index={i + 1}
+                />
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* AI SUMMARY BELOW DASHBOARD */}
         <motion.div
