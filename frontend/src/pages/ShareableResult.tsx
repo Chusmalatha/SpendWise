@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { MdShare, MdContentCopy, MdCheck, MdTrendingDown, MdArrowForward } from 'react-icons/md';
+import { MdTrendingDown, MdArrowForward } from 'react-icons/md';
 import { HiSparkles } from 'react-icons/hi';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, CartesianGrid
@@ -14,7 +14,6 @@ import { fetchAudit } from '../api/api';
 
 const ShareableResult = () => {
   const { id } = useParams();
-  const [copied, setCopied] = useState(false);
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -45,11 +44,7 @@ const ShareableResult = () => {
     loadResult();
   }, [id]);
 
-  const copyLink = () => {
-    navigator.clipboard.writeText(window.location.href);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
+
 
   if (loading) {
     return (
@@ -99,14 +94,7 @@ const ShareableResult = () => {
             </span>
             <span className="text-slate-500 text-xs font-mono">ID: {id}</span>
           </div>
-          <button
-            onClick={copyLink}
-            id="share-copy-btn"
-            className="btn-secondary flex items-center gap-2 text-sm py-2 px-4"
-          >
-            {copied ? <MdCheck className="text-green-400" /> : <MdShare />}
-            {copied ? 'Copied!' : 'Share'}
-          </button>
+
         </motion.div>
 
         {/* Header */}

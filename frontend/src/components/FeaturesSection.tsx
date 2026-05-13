@@ -1,11 +1,11 @@
 import { motion } from 'framer-motion';
 import {
-  MdAutoAwesome, MdSavings, MdCompare, MdShare, MdSpeed, MdSecurity
+  MdAutoAwesome, MdSavings, MdCompare, MdSpeed, MdSecurity
 } from 'react-icons/md';
 import { useInView } from '../hooks/useHooks';
 
 const ICON_MAP = {
-  MdAutoAwesome, MdSavings, MdCompare, MdShare, MdSpeed, MdSecurity
+  MdAutoAwesome, MdSavings, MdCompare, MdSpeed, MdSecurity
 };
 
 const FEATURES = [
@@ -33,14 +33,7 @@ const FEATURES = [
     iconColor: '#00d4ff',
     glowColor: 'rgba(0, 212, 255, 0.2)',
   },
-  {
-    icon: 'MdShare',
-    title: 'Shareable Reports',
-    description: 'Generate beautiful, investor-ready reports to share with your team or board. Each report gets a unique URL with privacy controls.',
-    gradient: 'from-pink-500/20 to-rose-500/20',
-    iconColor: '#f472b6',
-    glowColor: 'rgba(244, 114, 182, 0.2)',
-  },
+
   {
     icon: 'MdSpeed',
     title: 'Real-Time Pricing',
