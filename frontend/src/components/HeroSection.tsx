@@ -43,7 +43,7 @@ const HeroSection = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.1 }}
-              className="font-display text-5xl md:text-6xl lg:text-6xl xl:text-7xl font-black leading-[1.05] tracking-tight mb-6"
+              className="font-display text-5xl md:text-6xl lg:text-7xl font-extrabold leading-[1.1] tracking-tight mb-8 text-white"
             >
               Stop{' '}
               <span className="gradient-text">Overspending</span>
@@ -56,10 +56,10 @@ const HeroSection = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.2 }}
-              className="text-lg text-slate-400 leading-relaxed mb-10 max-w-md"
+              className="text-lg md:text-xl text-slate-400 leading-relaxed mb-10 max-w-lg"
             >
-              Instantly audit your AI stack and discover smarter, cheaper alternatives.{' '}
-              <span className="text-white font-medium">Save thousands per year</span> — in minutes.
+              The first AI-powered spend auditor for startups.{' '}
+              <span className="text-white font-semibold">Audit your stack in minutes</span> and reclaim wasted capital.
             </motion.p>
 
             {/* Buttons */}
