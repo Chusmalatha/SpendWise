@@ -4,7 +4,6 @@ import { motion } from 'framer-motion';
 import {
   MdInsights,
   MdShare,
-  MdContentCopy,
   MdCheck,
   MdRocketLaunch,
   MdArrowForward,
@@ -113,7 +112,6 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 
 const ResultsDashboard = () => {
   const { id } = useParams();
-  const [copied, setCopied] = useState(false);
   const [showLeadModal, setShowLeadModal] = useState(false);
 
   // Read from localStorage or use mock data if it's a demo
@@ -149,13 +147,7 @@ const ResultsDashboard = () => {
     );
   }
 
-  const copyLink = () => {
-    navigator.clipboard.writeText(window.location.href);
-    setCopied(true);
-    setTimeout(() => {
-      setCopied(false);
-    }, 2000);
-  };
+
 
   const totalSavingsPercent = Math.round(
     (data.projectedMonthlySavings / data.totalMonthlySpend) * 100
@@ -243,13 +235,7 @@ const ResultsDashboard = () => {
             </div>
 
             <div className="flex flex-wrap gap-3">
-              <button
-                onClick={copyLink}
-                className="px-6 py-3 rounded-2xl bg-white/5 border border-white/10 text-white font-semibold flex items-center gap-2 hover:bg-white/10 transition-all text-sm"
-              >
-                {copied ? <MdCheck className="text-green-400" /> : <MdContentCopy />}
-                {copied ? 'Copied' : 'Share'}
-              </button>
+
 
               <button
                 onClick={() => setShowLeadModal(true)}

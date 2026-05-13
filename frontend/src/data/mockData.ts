@@ -308,10 +308,7 @@ export const FAQ_DATA = [
     question: 'Does SpendWise AI cover all AI tools?',
     answer: "We cover 40+ major AI tools and APIs including ChatGPT, Claude, Cursor, GitHub Copilot, Gemini, and all major LLM APIs. We're adding new tools every week.",
   },
-  {
-    question: 'Can I share the results with my team or investors?',
-    answer: 'Yes! Every audit generates a unique shareable link. You can share the results page (which hides sensitive company info) with your co-founders, engineering team, or even investors.',
-  },
+
   {
     question: 'Is SpendWise AI free to use?',
     answer: 'The core audit is completely free. We offer a Pro plan for teams that want continuous monitoring, alerts when prices change, and API access for automated audits.',
@@ -344,14 +341,7 @@ export const FEATURES_DATA = [
     iconColor: '#00d4ff',
     borderColor: 'rgba(0, 212, 255, 0.2)',
   },
-  {
-    icon: 'MdShare',
-    title: 'Shareable Reports',
-    description: 'Generate beautiful, investor-ready reports to share with your team or board. Each report gets a unique URL with privacy controls.',
-    gradient: 'from-pink-500/20 to-rose-500/20',
-    iconColor: '#f472b6',
-    borderColor: 'rgba(244, 114, 182, 0.2)',
-  },
+
   {
     icon: 'MdSpeed',
     title: 'Real-Time Pricing',
@@ -392,8 +382,8 @@ export const HOW_IT_WORKS = [
   },
   {
     step: '04',
-    title: 'Share & Implement',
-    description: 'Share the report with your team or investors. Implement changes at your own pace.',
-    icon: 'MdRocketLaunch',
+    title: 'Implement Savings',
+    description: 'Follow the step-by-step guides to implement savings at your own pace.',
+    icon: 'MdCheck',
   },
 ];

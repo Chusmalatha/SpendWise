@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { MdAdd, MdAutoAwesome, MdInsights, MdRocketLaunch } from 'react-icons/md';
+import { MdAdd, MdAutoAwesome, MdInsights, MdRocketLaunch, MdCheck } from 'react-icons/md';
 import { useInView } from '../hooks/useHooks';
 
 const STEPS = [
@@ -32,9 +32,9 @@ const STEPS = [
   },
   {
     step: '04',
-    title: 'Share & Implement',
-    description: 'Share the report with your team or investors. Implement changes at your own pace.',
-    icon: MdRocketLaunch,
+    title: 'Implement Savings',
+    description: 'Follow the step-by-step guides to implement savings at your own pace.',
+    icon: MdCheck,
     color: '#00d4ff',
     glow: 'rgba(0, 212, 255, 0.3)',
     bg: 'from-cyan-500/20 to-cyan-600/10',
