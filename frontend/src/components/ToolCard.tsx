@@ -35,12 +35,11 @@ const ToolCard: React.FC<ToolCardProps> = ({ tool, index, onUpdate, onRemove, ca
 
   return (
     <motion.div
-      layout
-      initial={{ opacity: 0, y: 30, scale: 0.95 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: -20, scale: 0.95 }}
-      transition={{ duration: 0.4 }}
-      className="glass-card p-6 relative group"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{ duration: 0.3 }}
+      className="glass-card p-5 sm:p-6 relative group"
     >
       {/* Card header */}
       <div className="flex items-center justify-between mb-6">

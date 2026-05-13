@@ -180,7 +180,7 @@ const AuditForm = () => {
       <div className="glow-orb w-[500px] h-[500px] bg-indigo-600/15 top-0 left-0" />
       <div className="glow-orb w-[400px] h-[400px] bg-purple-600/10 bottom-0 right-0" />
 
-      <div className="container-custom relative z-10 max-w-3xl">
+      <div className="container-custom relative z-10 w-full max-w-3xl px-4 sm:px-0">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
