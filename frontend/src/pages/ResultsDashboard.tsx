@@ -121,13 +121,13 @@ const ResultsDashboard = () => {
     if (id === 'demo') {
       return MOCK_DASHBOARD_DATA;
     }
-    
+
     const saved = localStorage.getItem('spendwise_audit_result');
-    
+
     if (!saved && id === 'latest') {
       return MOCK_DASHBOARD_DATA;
     }
-    
+
     return saved ? JSON.parse(saved) : null;
   });
 
@@ -312,14 +312,20 @@ const ResultsDashboard = () => {
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="glass-card p-10 border-green-500/20 bg-green-500/5 text-center flex flex-col items-center justify-center min-h-[300px]"
+                  transition={{ duration: 0.4 }}
+                  className="glass-card p-14 md:p-16 border-green-500/20 bg-green-500/5 text-center flex flex-col items-center justify-center min-h-[420px] w-full rounded-3xl"
                 >
-                  <div className="w-16 h-16 rounded-full bg-green-500/10 flex items-center justify-center mb-6">
-                    <MdCheck className="text-3xl text-green-400" />
+                  <div className="w-24 h-24 rounded-full bg-green-500/10 flex items-center justify-center mb-8">
+                    <MdCheck className="text-5xl text-green-400" />
                   </div>
-                  <h3 className="text-white font-bold text-xl mb-3">Your Stack is Optimized</h3>
-                  <p className="text-slate-400 text-sm max-w-xs leading-relaxed">
-                    Great job! We analyzed your tools and couldn't find any immediate overpayments or redundancies.
+
+                  <h3 className="text-white font-bold text-3xl mb-5">
+                    Your Stack is Optimized
+                  </h3>
+
+                  <p className="text-slate-300 text-lg max-w-2xl leading-relaxed">
+                    Great job! We analyzed your tools and couldn't find any immediate
+                    overpayments or redundancies in your current AI software stack.
                   </p>
                 </motion.div>
               )}
@@ -346,7 +352,7 @@ const ResultsDashboard = () => {
                   </div>
                 </div>
                 <h3 className="text-slate-400 font-bold uppercase tracking-widest text-[10px] mb-4">Category Breakdown</h3>
-                <div className="h-[270px] w-full mt-0">
+                <div className="h-[290px] w-full mt-0">
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={data.spendBreakdown} barGap={8} margin={{ top: 0, right: 0, left: -25, bottom: 0 }}>
                       <defs>
@@ -401,7 +407,7 @@ const ResultsDashboard = () => {
             <SummaryCard aiSummary={data.aiSummary} />
           </motion.div>
 
-          <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} className="mt-32 pt-10 pb-20 border-t border-white/5 text-center">
+          <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} className="mt-16 pt-10 pb-20 border-t border-white/5 text-center">
             <div className="flex flex-col sm:flex-row gap-10 justify-center">
               <button onClick={() => setShowLeadModal(true)} className="px-8 py-4 rounded-2xl bg-indigo-600 text-white font-bold flex items-center justify-center gap-2 hover:bg-indigo-500 transition-all shadow-xl shadow-indigo-600/20">
                 <HiSparkles /> Generate PDF Report

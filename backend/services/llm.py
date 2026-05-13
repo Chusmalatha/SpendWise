@@ -28,8 +28,8 @@ async def generate_summary(audit_data: dict) -> str:
                 f"We recommend continuing to monitor seat utilization as your team scales to maintain this high level of operational efficiency."
             )
 
-    # Using a fast, free inference model from Hugging Face
-    API_URL = "https://api-inference.huggingface.co/models/google/gemma-2b-it"
+    # Using a high-quality Mistral model for better executive summaries
+    API_URL = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.3"
     headers = {"Authorization": f"Bearer {hf_key}"}
     
     prompt = f"""
