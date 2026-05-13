@@ -100,7 +100,7 @@
 
 @layer utilities {
   .container-custom {
-    @apply max-w-[1280px] mx-auto px-6;
+    @apply max-w-[1280px] mx-auto px-4 sm:px-6;
   }
 
   @keyframes gradient-x {
